@@ -1,0 +1,7 @@
+# 生成的输出文件（高清图/PDF），不纳入版本管理
+*.png
+*.pdf
+
+# Python 缓存
+__pycache__/
+*.pyc
