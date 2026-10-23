@@ -72,33 +72,84 @@
     </div>
 
     <h2>封面</h2>
-    <label>书名（腰部）</label>
-    <input type="text" id="title" value="落在我身上的雨">
+    <label>书名位置</label>
+    <select id="titlePos">
+      <option value="top">页面上方</option>
+      <option value="waist" selected>腰部</option>
+    </select>
+    <div id="titleTopWrap" style="display:none">
+      <label>书名上方留白（毫米）</label>
+      <input type="number" id="titleTopMargin" value="36" min="0" max="200" step="1">
+    </div>
+    <label>书名对齐</label>
+    <select id="titleAlign">
+      <option value="center" selected>居中</option>
+      <option value="left">左对齐</option>
+      <option value="right">右对齐</option>
+    </select>
+    <label>书名（可换行）</label>
+    <textarea id="title" style="min-height:40px">落在我身上的雨</textarea>
     <label>副标题 / 题记</label>
     <input type="text" id="subtitle" value="">
+    <label>副标题对齐</label>
+    <select id="subtitleAlign">
+      <option value="center" selected>居中</option>
+      <option value="left">左对齐</option>
+      <option value="right">右对齐</option>
+    </select>
     <label>作者</label>
     <input type="text" id="author" value="陆庆屹/著">
-    <label>年份（可选）</label>
-    <input type="text" id="years" value="">
+    <label>作者对齐</label>
+    <select id="authorAlign">
+      <option value="center" selected>居中</option>
+      <option value="left">左对齐</option>
+      <option value="right">右对齐</option>
+    </select>
+    <label>作者排列</label>
+    <select id="authorLayout">
+      <option value="horizontal" selected>横排</option>
+      <option value="vertical">竖排</option>
+    </select>
+    <div id="authorVTopWrap" style="display:none">
+      <label>作者竖排顶部位置（毫米）</label>
+      <input type="number" id="authorVTop" value="160" min="0" max="300" step="1">
+    </div>
+    <label>广告语（可选）</label>
+    <input type="text" id="slogan" value="">
+    <label>广告语顶部位置（毫米）</label>
+    <input type="number" id="sloganTop" value="194" min="0" max="300" step="1">
+    <label>广告语对齐</label>
+    <select id="sloganAlign">
+      <option value="center" selected>居中</option>
+      <option value="left">左对齐</option>
+      <option value="right">右对齐</option>
+    </select>
     <div class="checks">
       <div class="check"><input type="checkbox" id="coverShowTitle" checked><label for="coverShowTitle">封面显示书名</label></div>
       <div class="check"><input type="checkbox" id="coverShowSubtitle" checked><label for="coverShowSubtitle">封面显示副标题</label></div>
       <div class="check"><input type="checkbox" id="coverShowAuthor" checked><label for="coverShowAuthor">封面显示作者</label></div>
-      <div class="check"><input type="checkbox" id="coverShowYears" checked><label for="coverShowYears">封面显示年份</label></div>
+      <div class="check"><input type="checkbox" id="coverShowSlogan" checked><label for="coverShowSlogan">封面显示广告语</label></div>
     </div>
     <label>封面图片方式</label>
     <select id="coverImageMode">
       <option value="half" selected>上半部分图片区</option>
+      <option value="bottom">下半部分图片区</option>
       <option value="full">整张铺满封面</option>
       <option value="none">不使用图片</option>
     </select>
     <div id="halfImageWrap">
-      <label>上半部分图片（可替换）</label>
+      <label>封面图片（可替换，用于上/下半部分）</label>
       <input type="file" id="coverImage" accept="image/*">
     </div>
     <div id="fullImageWrap" style="display:none">
       <label>整张封面图（铺满整个封面区域）</label>
       <input type="file" id="coverFullImage" accept="image/*">
+    </div>
+    <div id="bottomImageWrap" style="display:none">
+      <div class="row">
+        <div><label>下半图顶部位置（毫米）</label><input type="number" id="bottomImgTop" value="136" min="0" max="300" step="1"></div>
+        <div><label>下半图高度（毫米）</label><input type="number" id="bottomImgH" value="81" min="10" max="300" step="1"></div>
+      </div>
     </div>
     <label>铺满方式（图片比例与区域不一致时）</label>
     <select id="imageMode">
@@ -125,6 +176,13 @@
 刘娟，本书作者，秀茹的女儿。她用七年时间采访、整理，写下了母亲平凡而伟大的一生。
 
 此区域可替换为你自己的作者介绍文字。</textarea>
+    <div class="check"><input type="checkbox" id="frontFlapShowImage"><label for="frontFlapShowImage" style="margin:0">显示作者图片</label></div>
+    <div id="frontFlapImageWrap" style="display:none">
+      <label>作者图片（可上传）</label>
+      <input type="file" id="frontFlapImage" accept="image/*">
+      <label>图片宽度（毫米）</label>
+      <input type="number" id="frontFlapImageW" value="60" min="20" max="200" step="1">
+    </div>
     <div class="colorline"><span>前勒口底色</span><input type="color" id="frontFlapBg" value="#ffffff"></div>
 
     <h2>封底（文字框）</h2>
@@ -157,6 +215,14 @@
         <option value="STZhongsong">华文中宋</option>
         <option value="STXihei">华文细黑</option>
         <option value="STSong">华文宋体</option>
+        <option value="PingFang SC">苹方</option>
+        <option value="Source Han Serif SC">思源宋体</option>
+        <option value="Source Han Sans SC">思源黑体</option>
+        <option value="Noto Serif SC">思源宋体 Noto</option>
+        <option value="Noto Sans SC">思源黑体 Noto</option>
+        <option value="LXGW WenKai">霞鹜文楷</option>
+        <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
+        <option value="Hiragino Sans GB">冬青黑体</option>
       </select></div>
       <div><label>书名字体</label><select id="titleFont">
         <option value="SimSun">宋体</option>
@@ -174,6 +240,16 @@
         <option value="FZYaoTi">方正姚体</option>
         <option value="STCaiyun">华文彩云</option>
         <option value="STHupo">华文琥珀</option>
+        <option value="PingFang SC">苹方</option>
+        <option value="Source Han Serif SC">思源宋体</option>
+        <option value="Source Han Sans SC">思源黑体</option>
+        <option value="Noto Serif SC">思源宋体 Noto</option>
+        <option value="Noto Sans SC">思源黑体 Noto</option>
+        <option value="LXGW WenKai">霞鹜文楷</option>
+        <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
+        <option value="ZCOOL XiaoWei">站酷小薇体</option>
+        <option value="ZCOOL QingKe HuangYou">站酷庆科黄油体</option>
+        <option value="Hiragino Sans GB">冬青黑体</option>
       </select></div>
     </div>
     <div class="row">
@@ -182,7 +258,7 @@
     </div>
     <div class="row">
       <div><label>作者大小（磅）</label><input type="number" id="authorSizePt" value="20" min="6" max="120" step="0.5"></div>
-      <div><label>年份大小（磅）</label><input type="number" id="yearsSizePt" value="18" min="6" max="120" step="0.5"></div>
+      <div><label>广告语大小（磅）</label><input type="number" id="sloganSizePt" value="18" min="6" max="120" step="0.5"></div>
     </div>
     <div class="row">
       <div><label>正文大小（磅）</label><input type="number" id="bodySizePt" value="14" min="6" max="80" step="0.5"></div>
@@ -192,8 +268,13 @@
       <div><label>书脊书名大小（磅）</label><input type="number" id="spineSizePt" value="22" min="6" max="120" step="0.5"></div>
       <div></div>
     </div>
+    <div class="row">
+      <div><label>封底/勒口文字顶部留白（毫米）</label><input type="number" id="textTopMargin" value="20" min="0" max="100" step="1"></div>
+      <div><label>左右留白（毫米）</label><input type="number" id="textSideMargin" value="16" min="0" max="80" step="1"></div>
+    </div>
     <div class="colorline"><span>正文颜色</span><input type="color" id="bodyColor" value="#000000"></div>
     <div class="hint">磅（pt）为印刷常用字号单位，1 磅 ≈ 0.353 毫米。书脊字号超过书脊宽度时会自动缩小。常规参考：初号 42、一号 26、三号 16、四号 14、小四 12、五号 10.5。</div>
+    <div class="hint">字体提示：苹方、思源宋体/黑体、霞鹜文楷、阿里巴巴普惠体、站酷等热门字体需本机已安装才能生效；未安装会自动回退到默认字体。</div>
 
     <h2>辅助线</h2>
     <div class="check"><input type="checkbox" id="showGuides" checked><label for="showGuides" style="margin:0">预览显示折线 / 出血线 / 文字框</label></div>
@@ -216,6 +297,7 @@
 
   var coverImageEl = null; // 上半部分图片对象
   var coverFullImageEl = null; // 整张封面图对象
+  var frontFlapImageEl = null; // 前勒口作者图片对象
 
   function cfg(){
     var c = {
@@ -225,9 +307,19 @@
       flapW:  parseFloat($("flapW").value)||105,
       bleed:  parseFloat($("bleed").value)||3,
       title:  $("title").value,
+      titlePos: $("titlePos").value,
+      titleAlign: $("titleAlign").value,
+      titleTopMargin: parseFloat($("titleTopMargin").value)||36,
+      bottomImgTop: parseFloat($("bottomImgTop").value)||136,
+      bottomImgH: parseFloat($("bottomImgH").value)||81,
       subtitle: $("subtitle").value,
+      subtitleAlign: $("subtitleAlign").value,
       author: $("author").value,
-      years:  $("years").value,
+      authorAlign: $("authorAlign").value,
+      authorLayout: $("authorLayout").value,
+      authorVTop: parseFloat($("authorVTop").value)||160,
+      slogan:  $("slogan").value,
+      sloganAlign: $("sloganAlign").value,
       publisher: $("publisher").value,
       spineSameTitle: $("spineSameTitle").checked,
       spineTitle: $("spineTitle").value,
@@ -237,14 +329,17 @@
       coverShowTitle: $("coverShowTitle").checked,
       coverShowSubtitle: $("coverShowSubtitle").checked,
       coverShowAuthor: $("coverShowAuthor").checked,
-      coverShowYears: $("coverShowYears").checked,
+      coverShowSlogan: $("coverShowSlogan").checked,
       titleSizePt: parseFloat($("titleSizePt").value)||54,
       subtitleSizePt: parseFloat($("subtitleSizePt").value)||24,
       authorSizePt: parseFloat($("authorSizePt").value)||20,
-      yearsSizePt: parseFloat($("yearsSizePt").value)||18,
+      sloganSizePt: parseFloat($("sloganSizePt").value)||18,
+      sloganTop: parseFloat($("sloganTop").value)||194,
       bodySizePt: parseFloat($("bodySizePt").value)||14,
       flapSizePt: parseFloat($("flapSizePt").value)||13,
       spineSizePt: parseFloat($("spineSizePt").value)||22,
+      textTopMargin: parseFloat($("textTopMargin").value)||20,
+      textSideMargin: parseFloat($("textSideMargin").value)||16,
       frontFlapText: $("frontFlapText").value,
       backCoverText: $("backCoverText").value,
       backFlapText: $("backFlapText").value,
@@ -259,7 +354,9 @@
       backCoverBg: $("backCoverBg").value,
       backFlapBg: $("backFlapBg").value,
       imageMode: $("imageMode").value,
-      coverImageMode: $("coverImageMode").value
+      coverImageMode: $("coverImageMode").value,
+      frontFlapShowImage: $("frontFlapShowImage").checked,
+      frontFlapImageW: parseFloat($("frontFlapImageW").value)||60
     };
     return c;
   }
@@ -309,7 +406,7 @@
   }
 
   function fontStr(font, sizePx, bold){
-    return (bold?"bold ":"") + sizePx + "px " + font + ", serif";
+    return (bold?"bold ":"") + sizePx + "px \"" + font + "\", serif";
   }
 
   function ptToMm(pt){ return pt * (25.4/72); }
@@ -337,6 +434,18 @@
     var y = y0 + Math.max(0,(maxH - total)/2);
     for(var i=0;i<chars.length;i++){
       g.fillText(chars[i], cx, y + i*sizePx*1.35);
+    }
+  }
+
+  function drawAuthorVertical(g, text, x, y0, sizePx, font, color, align, haloColor, haloWidth){
+    g.font = fontStr(font, sizePx, false);
+    g.fillStyle = color;
+    g.textAlign = align;
+    g.textBaseline = "top";
+    var chars = (text||"").replace(/\s+/g,"").split("");
+    var step = sizePx*1.35;
+    for(var i=0;i<chars.length;i++){
+      fillTextHalo(g, chars[i], x, y0 + i*step, haloColor, haloWidth);
     }
   }
 
@@ -391,12 +500,14 @@
     fill(R.frontFlap, c.frontFlapBg);
 
     var h = c.coverH; // 成品高（mm）
+    var topM = c.textTopMargin; // 封底/勒口文字顶部留白（毫米）
 
     // ===== 封面 =====
     var fc = R.frontCover;
     var fcRect = {x: fc.x, y: fc.y, w: fc.w, h: fc.h};
     var imgM = h*0.045;
-    var imgRect = {x: fc.x + imgM, y: fc.y + imgM, w: fc.w - 2*imgM, h: h*0.44};
+    var imgRectTop = {x: fc.x + imgM, y: fc.y + imgM, w: fc.w - 2*imgM, h: h*0.44};
+    var imgRectBottom = {x: fc.x + imgM, y: fc.y + c.bottomImgTop, w: fc.w - 2*imgM, h: c.bottomImgH};
     var coverMode = c.coverImageMode || "half";
     var activeImgRect = null;
     if(coverMode === "full"){
@@ -406,32 +517,40 @@
       } else {
         drawPlaceholder(g, fcRect, "上传整张封面图（铺满整个封面）", h, c, ppm, 0.1);
       }
-    } else if(coverMode === "half"){
-      activeImgRect = imgRect;
+    } else if(coverMode === "half" || coverMode === "bottom"){
+      activeImgRect = (coverMode === "half") ? imgRectTop : imgRectBottom;
       if(coverImageEl){
-        drawImageFit(g, coverImageEl, imgRect, c.imageMode, ppm);
+        drawImageFit(g, coverImageEl, activeImgRect, c.imageMode, ppm);
       } else {
-        drawPlaceholder(g, imgRect, "上传封面图片（上半部分图片区）", h, c, ppm);
+        drawPlaceholder(g, activeImgRect, "上传封面图片（" + (coverMode === "half" ? "上半部分" : "下半部分") + "图片区）", h, c, ppm);
       }
     }
 
-    // 整张铺满时文字叠加在图上，加白色描边提升可读性
-    var onImage = coverMode === "full" && !!coverFullImageEl;
-    var halo = onImage ? "rgba(255,255,255,0.85)" : null;
+    // 书名/副标题叠在图片上时加白色描边提升可读性（整张铺满，或半图模式下书名在上方）
+    var titleOnImage = (coverMode === "full" && !!coverFullImageEl) || (coverMode === "half" && !!coverImageEl && c.titlePos === "top");
+    var halo = titleOnImage ? "rgba(255,255,255,0.85)" : null;
+    var authorOnImage = (coverMode === "full" && !!coverFullImageEl) || (coverMode === "bottom" && !!coverImageEl);
+    var authorHalo = authorOnImage ? "rgba(255,255,255,0.85)" : null;
 
-    // 书名（腰部）
-    var titleY = fc.y + h*0.52;
+    // 书名（页面上方 / 腰部）
+    var titleY = fc.y + (c.titlePos === "top" ? c.titleTopMargin : h*0.52);
     var titleSize = ptToMm(c.titleSizePt);
     var titleLineH = titleSize*1.25;
     var titleLines = [];
     if(c.coverShowTitle){
       g.font = fontStr(c.titleFont, titleSize*ppm, true);
-      titleLines = wrapText(g, c.title, fc.w*0.86*ppm);
+      var titleMaxW = fc.w*0.86;
+      var titleSideM = fc.w*0.07;
+      var titleAlign = c.titleAlign || "center";
+      var titleAX;
+      if(titleAlign === "left"){ titleAX = (fc.x + titleSideM)*ppm; g.textAlign = "left"; }
+      else if(titleAlign === "right"){ titleAX = (fc.x + fc.w - titleSideM)*ppm; g.textAlign = "right"; }
+      else { titleAX = (fc.x + fc.w/2)*ppm; g.textAlign = "center"; }
+      titleLines = wrapText(g, c.title, titleMaxW*ppm);
       g.fillStyle = c.titleColor;
-      g.textAlign = "center";
       g.textBaseline = "top";
       for(var j=0;j<titleLines.length;j++){
-        fillTextHalo(g, titleLines[j], (fc.x+fc.w/2)*ppm, (titleY + j*titleLineH)*ppm, halo, titleSize*ppm*0.1);
+        fillTextHalo(g, titleLines[j], titleAX, (titleY + j*titleLineH)*ppm, halo, titleSize*ppm*0.1);
       }
     }
 
@@ -441,31 +560,48 @@
       var subSize = ptToMm(c.subtitleSizePt);
       g.font = fontStr(c.bodyFont, subSize*ppm, false);
       g.fillStyle = c.bodyColor;
-      g.textAlign = "center";
       g.textBaseline = "top";
-      fillTextHalo(g, c.subtitle, (fc.x+fc.w/2)*ppm, subY*ppm, halo, subSize*ppm*0.1);
+      var subAX;
+      if(c.subtitleAlign === "left"){ subAX = (fc.x + fc.w*0.07)*ppm; g.textAlign = "left"; }
+      else if(c.subtitleAlign === "right"){ subAX = (fc.x + fc.w - fc.w*0.07)*ppm; g.textAlign = "right"; }
+      else { subAX = (fc.x + fc.w/2)*ppm; g.textAlign = "center"; }
+      fillTextHalo(g, c.subtitle, subAX, subY*ppm, halo, subSize*ppm*0.1);
     }
 
     // 作者
     if(c.author && c.coverShowAuthor){
-      var auY = fc.y + h*0.80;
       var auSize = ptToMm(c.authorSizePt);
-      g.font = fontStr(c.bodyFont, auSize*ppm, false);
-      g.fillStyle = c.bodyColor;
-      g.textAlign = "center";
-      g.textBaseline = "top";
-      fillTextHalo(g, c.author, (fc.x+fc.w/2)*ppm, auY*ppm, halo, auSize*ppm*0.12);
+      if(c.authorLayout === "vertical"){
+        var vAX, vAlign;
+        if(c.authorAlign === "left"){ vAX = (fc.x + fc.w*0.07)*ppm; vAlign = "left"; }
+        else if(c.authorAlign === "right"){ vAX = (fc.x + fc.w - fc.w*0.07)*ppm; vAlign = "right"; }
+        else { vAX = (fc.x + fc.w/2)*ppm; vAlign = "center"; }
+        drawAuthorVertical(g, c.author, vAX, (fc.y + c.authorVTop)*ppm, auSize*ppm, c.bodyFont, c.bodyColor, vAlign, authorHalo, auSize*ppm*0.12);
+      } else {
+        var auY = fc.y + h*0.80;
+        g.font = fontStr(c.bodyFont, auSize*ppm, false);
+        g.fillStyle = c.bodyColor;
+        g.textBaseline = "top";
+        var auAX;
+        if(c.authorAlign === "left"){ auAX = (fc.x + fc.w*0.07)*ppm; g.textAlign = "left"; }
+        else if(c.authorAlign === "right"){ auAX = (fc.x + fc.w - fc.w*0.07)*ppm; g.textAlign = "right"; }
+        else { auAX = (fc.x + fc.w/2)*ppm; g.textAlign = "center"; }
+        fillTextHalo(g, c.author, auAX, auY*ppm, authorHalo, auSize*ppm*0.12);
+      }
     }
 
-    // 年份
-    if(c.years && c.coverShowYears){
-      var yrY = fc.y + h*0.86;
-      var yrSize = ptToMm(c.yearsSizePt);
+    // 广告语
+    if(c.slogan && c.coverShowSlogan){
+      var yrY = fc.y + c.sloganTop;
+      var yrSize = ptToMm(c.sloganSizePt);
       g.font = fontStr(c.bodyFont, yrSize*ppm, false);
       g.fillStyle = c.bodyColor;
-      g.textAlign = "center";
       g.textBaseline = "top";
-      fillTextHalo(g, c.years, (fc.x+fc.w/2)*ppm, yrY*ppm, halo, yrSize*ppm*0.12);
+      var yrAX;
+      if(c.sloganAlign === "left"){ yrAX = (fc.x + fc.w*0.07)*ppm; g.textAlign = "left"; }
+      else if(c.sloganAlign === "right"){ yrAX = (fc.x + fc.w - fc.w*0.07)*ppm; g.textAlign = "right"; }
+      else { yrAX = (fc.x + fc.w/2)*ppm; g.textAlign = "center"; }
+      fillTextHalo(g, c.slogan, yrAX, yrY*ppm, authorHalo, yrSize*ppm*0.12);
     }
 
     // ===== 书脊 =====
@@ -497,22 +633,32 @@
 
     // ===== 封底（文字框）=====
     var bc = R.backCover;
-    var bm = h*0.06;
+    var bm = c.textSideMargin;
     var bodySize = ptToMm(c.bodySizePt);
     var lineH = bodySize*1.7;
     g.font = fontStr(c.bodyFont, bodySize*ppm, false);
-    drawTextBlock(g, c.backCoverText, (bc.x+bm)*ppm, (bc.y+bm)*ppm, (bc.w-2*bm)*ppm, lineH*ppm, c.bodyFont, bodySize*ppm, c.bodyColor, "left", false);
+    drawTextBlock(g, c.backCoverText, (bc.x+bm)*ppm, (bc.y+topM)*ppm, (bc.w-2*bm)*ppm, lineH*ppm, c.bodyFont, bodySize*ppm, c.bodyColor, "left", false);
 
     // ===== 前勒口（作者介绍）=====
     var ff = R.frontFlap;
-    var fm = h*0.05;
+    var fm = c.textSideMargin;
     var fSize = ptToMm(c.flapSizePt);
     var fLineH = fSize*1.7;
-    drawTextBlock(g, c.frontFlapText, (ff.x+fm)*ppm, (ff.y+fm)*ppm, (ff.w-2*fm)*ppm, fLineH*ppm, c.bodyFont, fSize*ppm, c.bodyColor, "left", false);
+    var flapTextY = ff.y + topM;
+    var flapImgRect = null;
+    if(c.frontFlapShowImage && frontFlapImageEl){
+      var imgW = Math.min(c.frontFlapImageW, ff.w - 2*fm);
+      var ratio = (frontFlapImageEl.naturalHeight || 1) / (frontFlapImageEl.naturalWidth || 1);
+      var imgH = imgW * ratio;
+      flapImgRect = {x: ff.x + (ff.w - imgW)/2, y: ff.y + topM, w: imgW, h: imgH};
+      drawImageFit(g, frontFlapImageEl, flapImgRect, "contain", ppm);
+      flapTextY = flapImgRect.y + flapImgRect.h + fSize*1.2;
+    }
+    drawTextBlock(g, c.frontFlapText, (ff.x+fm)*ppm, flapTextY*ppm, (ff.w-2*fm)*ppm, fLineH*ppm, c.bodyFont, fSize*ppm, c.bodyColor, "left", false);
 
     // ===== 后勒口（文字区）=====
     var bf = R.backFlap;
-    drawTextBlock(g, c.backFlapText, (bf.x+fm)*ppm, (bf.y+fm)*ppm, (bf.w-2*fm)*ppm, fLineH*ppm, c.bodyFont, fSize*ppm, c.bodyColor, "left", false);
+    drawTextBlock(g, c.backFlapText, (bf.x+fm)*ppm, (bf.y+topM)*ppm, (bf.w-2*fm)*ppm, fLineH*ppm, c.bodyFont, fSize*ppm, c.bodyColor, "left", false);
 
     // ===== 辅助线 =====
     if(guides){
@@ -533,12 +679,15 @@
       // 文字框虚线
       g.strokeStyle = "rgba(0,150,80,0.6)";
       g.setLineDash([3,3]);
-      g.strokeRect((bc.x+bm)*ppm,(bc.y+bm)*ppm,(bc.w-2*bm)*ppm,(bc.h-2*bm)*ppm);
-      g.strokeRect((ff.x+fm)*ppm,(ff.y+fm)*ppm,(ff.w-2*fm)*ppm,(ff.h-2*fm)*ppm);
-      g.strokeRect((bf.x+fm)*ppm,(bf.y+fm)*ppm,(bf.w-2*fm)*ppm,(bf.h-2*fm)*ppm);
+      g.strokeRect((bc.x+bm)*ppm,(bc.y+topM)*ppm,(bc.w-2*bm)*ppm,(bc.h-bm-topM)*ppm);
+      g.strokeRect((ff.x+fm)*ppm, flapTextY*ppm, (ff.w-2*fm)*ppm, (ff.h-fm-(flapTextY-ff.y))*ppm);
+      g.strokeRect((bf.x+fm)*ppm,(bf.y+topM)*ppm,(bf.w-2*fm)*ppm,(bf.h-fm-topM)*ppm);
       g.strokeStyle = "rgba(180,90,0,0.7)";
       if(activeImgRect){
         g.strokeRect(activeImgRect.x*ppm,activeImgRect.y*ppm,activeImgRect.w*ppm,activeImgRect.h*ppm);
+      }
+      if(flapImgRect){
+        g.strokeRect(flapImgRect.x*ppm,flapImgRect.y*ppm,flapImgRect.w*ppm,flapImgRect.h*ppm);
       }
       g.restore();
     }
@@ -686,18 +835,18 @@
   }
 
   // ---------- 事件绑定 ----------
-  var ids = ["coverW","coverH","spineW","flapW","bleed","title","subtitle","author","years",
+  var ids = ["coverW","coverH","spineW","flapW","bleed","title","subtitle","author","slogan",
     "publisher","spineTitle","spineAuthor","frontFlapText","backCoverText","backFlapText",
     "bodyFont","titleFont","bodyColor","titleColor","coverBg","spineBg","spineColor",
-    "frontFlapBg","backCoverBg","backFlapBg","imageMode",
-    "titleSizePt","subtitleSizePt","authorSizePt","yearsSizePt","bodySizePt","flapSizePt","spineSizePt"];
+    "frontFlapBg","backCoverBg","backFlapBg","imageMode","titleAlign","subtitleAlign","authorAlign","sloganAlign",
+    "titleSizePt","subtitleSizePt","authorSizePt","sloganSizePt","bodySizePt","flapSizePt","spineSizePt","textTopMargin","textSideMargin","frontFlapImageW","titleTopMargin","bottomImgTop","bottomImgH","sloganTop","authorVTop"];
   ids.forEach(function(id){
     var el = $(id);
     el.addEventListener("input", redraw);
     el.addEventListener("change", redraw);
   });
   ["spineSameTitle","spineShowAuthor","showGuides","exportBleed","exportGuides",
-   "coverShowTitle","coverShowSubtitle","coverShowAuthor","coverShowYears"].forEach(function(id){
+   "coverShowTitle","coverShowSubtitle","coverShowAuthor","coverShowSlogan"].forEach(function(id){
     $(id).addEventListener("change", function(){ redraw(); });
   });
   $("spineSameTitle").addEventListener("change", function(){
@@ -710,6 +859,18 @@
   }
   $("spineShowAuthor").addEventListener("change", updateSpineAuthorVisibility);
   $("spineSameAuthor").addEventListener("change", function(){ updateSpineAuthorVisibility(); redraw(); });
+  function updateFrontFlapImageVisibility(){
+    $("frontFlapImageWrap").style.display = $("frontFlapShowImage").checked ? "" : "none";
+  }
+  $("frontFlapShowImage").addEventListener("change", function(){ updateFrontFlapImageVisibility(); redraw(); });
+  function updateTitleTopVisibility(){
+    $("titleTopWrap").style.display = $("titlePos").value === "top" ? "" : "none";
+  }
+  $("titlePos").addEventListener("change", function(){ updateTitleTopVisibility(); redraw(); });
+  function updateAuthorLayoutVisibility(){
+    $("authorVTopWrap").style.display = $("authorLayout").value === "vertical" ? "" : "none";
+  }
+  $("authorLayout").addEventListener("change", function(){ updateAuthorLayoutVisibility(); redraw(); });
   function handleImageUpload(e, setter){
     var f = e.target.files && e.target.files[0];
     if(!f) return;
@@ -720,10 +881,12 @@
   }
   $("coverImage").addEventListener("change", function(e){ handleImageUpload(e, function(im){ coverImageEl = im; }); });
   $("coverFullImage").addEventListener("change", function(e){ handleImageUpload(e, function(im){ coverFullImageEl = im; }); });
+  $("frontFlapImage").addEventListener("change", function(e){ handleImageUpload(e, function(im){ frontFlapImageEl = im; }); });
   function updateImageWrapVisibility(){
     var m = $("coverImageMode").value;
-    $("halfImageWrap").style.display = (m === "half") ? "" : "none";
+    $("halfImageWrap").style.display = (m === "half" || m === "bottom") ? "" : "none";
     $("fullImageWrap").style.display = (m === "full") ? "" : "none";
+    $("bottomImageWrap").style.display = (m === "bottom") ? "" : "none";
   }
   $("coverImageMode").addEventListener("change", function(){ updateImageWrapVisibility(); redraw(); });
   $("download").addEventListener("click", download);
@@ -732,6 +895,9 @@
 
   updateImageWrapVisibility();
   updateSpineAuthorVisibility();
+  updateFrontFlapImageVisibility();
+  updateTitleTopVisibility();
+  updateAuthorLayoutVisibility();
   redraw();
 })();
 </script>
