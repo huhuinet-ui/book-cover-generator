@@ -87,6 +87,8 @@
       <option value="left">左对齐</option>
       <option value="right">右对齐</option>
     </select>
+    <label>书名左右偏移（毫米，负值向左）</label>
+    <input type="number" id="titleOffsetX" value="0" min="-200" max="200" step="1">
     <label>书名（可换行）</label>
     <textarea id="title" style="min-height:40px">落在我身上的雨</textarea>
     <label>副标题 / 题记</label>
@@ -110,6 +112,10 @@
       <option value="horizontal" selected>横排</option>
       <option value="vertical">竖排</option>
     </select>
+    <div id="authorHTopWrap">
+      <label>作者横排顶部位置（毫米）</label>
+      <input type="number" id="authorHTop" value="181" min="0" max="300" step="1">
+    </div>
     <div id="authorVTopWrap" style="display:none">
       <label>作者竖排顶部位置（毫米）</label>
       <input type="number" id="authorVTop" value="160" min="0" max="300" step="1">
@@ -158,6 +164,7 @@
     </select>
     <div class="colorline"><span>封面底色</span><input type="color" id="coverBg" value="#ffffff"></div>
     <div class="colorline"><span>书名颜色</span><input type="color" id="titleColor" value="#000000"></div>
+    <div class="colorline"><span>作者颜色</span><input type="color" id="authorColor" value="#000000"></div>
 
     <h2>书脊</h2>
     <div class="check"><input type="checkbox" id="spineSameTitle" checked><label for="spineSameTitle" style="margin:0">书脊书名与封面一致</label></div>
@@ -191,6 +198,10 @@
 我用 7 万字记录下了她从 1958 年到 2018 年整整 60 年的人生故事。我确信，只要她的故事还在，她就永远不会被遗忘。
 
 当女儿再问我：“妈妈，姥姥是谁呀？我想见见她。”我就跟她一起，翻开这本书，了解一下秀茹的一生。</textarea>
+    <div class="row">
+      <div><label>文字顶部位置（毫米）</label><input type="number" id="backCoverTextTop" value="20" min="0" max="250" step="1"></div>
+      <div><label>文字区域高度（毫米）</label><input type="number" id="backCoverTextH" value="186" min="20" max="250" step="1"></div>
+    </div>
     <div class="colorline"><span>封底底色</span><input type="color" id="backCoverBg" value="#ffffff"></div>
 
     <h2>后勒口（文字区）</h2>
@@ -210,37 +221,21 @@
         <option value="Microsoft YaHei">微软雅黑</option>
         <option value="DengXian">等线</option>
         <option value="YouYuan">幼圆</option>
+        <option value="STZhongsong">华文中宋</option>
         <option value="STKaiti">华文楷体</option>
         <option value="STFangsong">华文仿宋</option>
-        <option value="STZhongsong">华文中宋</option>
         <option value="STXihei">华文细黑</option>
         <option value="STSong">华文宋体</option>
-        <option value="PingFang SC">苹方</option>
-        <option value="Source Han Serif SC">思源宋体</option>
-        <option value="Source Han Sans SC">思源黑体</option>
-        <option value="Noto Serif SC">思源宋体 Noto</option>
-        <option value="Noto Sans SC">思源黑体 Noto</option>
-        <option value="LXGW WenKai">霞鹜文楷</option>
-        <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
-        <option value="Hiragino Sans GB">冬青黑体</option>
-      </select></div>
-      <div><label>书名字体</label><select id="titleFont">
-        <option value="SimSun">宋体</option>
-        <option value="SimHei">黑体</option>
-        <option value="KaiTi">楷体</option>
-        <option value="FangSong" selected>仿宋</option>
-        <option value="Microsoft YaHei">微软雅黑</option>
-        <option value="STZhongsong">华文中宋</option>
         <option value="STXingkai">华文行楷</option>
         <option value="STLiti">华文隶书</option>
         <option value="STXinwei">华文新魏</option>
-        <option value="LiSu">隶书</option>
-        <option value="YouYuan">幼圆</option>
-        <option value="FZShuTi">方正舒体</option>
-        <option value="FZYaoTi">方正姚体</option>
         <option value="STCaiyun">华文彩云</option>
         <option value="STHupo">华文琥珀</option>
+        <option value="LiSu">隶书</option>
+        <option value="FZShuTi">方正舒体</option>
+        <option value="FZYaoTi">方正姚体</option>
         <option value="PingFang SC">苹方</option>
+        <option value="Hiragino Sans GB">冬青黑体</option>
         <option value="Source Han Serif SC">思源宋体</option>
         <option value="Source Han Sans SC">思源黑体</option>
         <option value="Noto Serif SC">思源宋体 Noto</option>
@@ -249,9 +244,44 @@
         <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
         <option value="ZCOOL XiaoWei">站酷小薇体</option>
         <option value="ZCOOL QingKe HuangYou">站酷庆科黄油体</option>
+        <option value="ZCOOL KuaiLe">站酷快乐体</option>
+      </select></div>
+      <div><label>书名字体</label><select id="titleFont">
+        <option value="SimSun">宋体</option>
+        <option value="NSimSun">新宋体</option>
+        <option value="SimHei">黑体</option>
+        <option value="KaiTi">楷体</option>
+        <option value="FangSong" selected>仿宋</option>
+        <option value="Microsoft YaHei">微软雅黑</option>
+        <option value="DengXian">等线</option>
+        <option value="YouYuan">幼圆</option>
+        <option value="STZhongsong">华文中宋</option>
+        <option value="STKaiti">华文楷体</option>
+        <option value="STFangsong">华文仿宋</option>
+        <option value="STXihei">华文细黑</option>
+        <option value="STSong">华文宋体</option>
+        <option value="STXingkai">华文行楷</option>
+        <option value="STLiti">华文隶书</option>
+        <option value="STXinwei">华文新魏</option>
+        <option value="STCaiyun">华文彩云</option>
+        <option value="STHupo">华文琥珀</option>
+        <option value="LiSu">隶书</option>
+        <option value="FZShuTi">方正舒体</option>
+        <option value="FZYaoTi">方正姚体</option>
+        <option value="PingFang SC">苹方</option>
         <option value="Hiragino Sans GB">冬青黑体</option>
+        <option value="Source Han Serif SC">思源宋体</option>
+        <option value="Source Han Sans SC">思源黑体</option>
+        <option value="Noto Serif SC">思源宋体 Noto</option>
+        <option value="Noto Sans SC">思源黑体 Noto</option>
+        <option value="LXGW WenKai">霞鹜文楷</option>
+        <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
+        <option value="ZCOOL XiaoWei">站酷小薇体</option>
+        <option value="ZCOOL QingKe HuangYou">站酷庆科黄油体</option>
+        <option value="ZCOOL KuaiLe">站酷快乐体</option>
       </select></div>
     </div>
+    <div class="hint" id="fontFilterHint"></div>
     <div class="row">
       <div><label>书名大小（磅）</label><input type="number" id="titleSizePt" value="48.5" min="8" max="300" step="0.5"></div>
       <div><label>副标题大小（磅）</label><input type="number" id="subtitleSizePt" value="24" min="6" max="120" step="0.5"></div>
@@ -282,6 +312,11 @@
     <div class="check"><input type="checkbox" id="exportGuides"><label for="exportGuides" style="margin:0">导出包含辅助线（一般不需要）</label></div>
 
     <div class="sep"></div>
+    <button id="saveProject">保存工程（导出 .json）</button>
+    <button id="openProjectBtn" class="secondary">打开工程（导入 .json）</button>
+    <input type="file" id="openProject" accept=".json,application/json" style="display:none">
+    <div class="hint">保存工程会把当前所有设置和已上传图片打包成 .json 文件下载；下次用「打开工程」载入即可继续修改，也可把 .json 拷到别的设备继续编辑。</div>
+    <div class="sep"></div>
     <button id="download">下载高清 PNG</button>
     <button id="downloadPdf" class="secondary">导出高清 PDF</button>
     <div class="hint">提示：双击本文件即可在浏览器中使用，无需联网。PDF 为单页、页面尺寸与图片一致（按 DPI 换算），适合直接送印厂；也可用同目录的 img2pdf.py 把多张图批量转 PDF。</div>
@@ -295,9 +330,9 @@
   var $ = function(id){ return document.getElementById(id); };
   var cv = $("cv"), ctx = cv.getContext("2d");
 
-  var coverImageEl = null; // 上半部分图片对象
-  var coverFullImageEl = null; // 整张封面图对象
-  var frontFlapImageEl = null; // 前勒口作者图片对象
+  var coverImageEl = null;        var coverImageDataUrl = null;
+  var coverFullImageEl = null;    var coverFullImageDataUrl = null;
+  var frontFlapImageEl = null;    var frontFlapImageDataUrl = null;
 
   function cfg(){
     var c = {
@@ -309,6 +344,7 @@
       title:  $("title").value,
       titlePos: $("titlePos").value,
       titleAlign: $("titleAlign").value,
+      titleOffsetX: (function(v){ v = parseFloat($("titleOffsetX").value); return isNaN(v) ? 0 : v; })(),
       titleTopMargin: parseFloat($("titleTopMargin").value)||36,
       bottomImgTop: parseFloat($("bottomImgTop").value)||136,
       bottomImgH: parseFloat($("bottomImgH").value)||81,
@@ -317,6 +353,7 @@
       author: $("author").value,
       authorAlign: $("authorAlign").value,
       authorLayout: $("authorLayout").value,
+      authorHTop: parseFloat($("authorHTop").value)||181,
       authorVTop: parseFloat($("authorVTop").value)||160,
       slogan:  $("slogan").value,
       sloganAlign: $("sloganAlign").value,
@@ -340,6 +377,8 @@
       spineSizePt: parseFloat($("spineSizePt").value)||22,
       textTopMargin: parseFloat($("textTopMargin").value)||20,
       textSideMargin: parseFloat($("textSideMargin").value)||16,
+      backCoverTextTop: parseFloat($("backCoverTextTop").value)||20,
+      backCoverTextH: parseFloat($("backCoverTextH").value)||186,
       frontFlapText: $("frontFlapText").value,
       backCoverText: $("backCoverText").value,
       backFlapText: $("backFlapText").value,
@@ -347,6 +386,7 @@
       titleFont: $("titleFont").value,
       bodyColor: $("bodyColor").value,
       titleColor: $("titleColor").value,
+      authorColor: $("authorColor").value,
       coverBg: $("coverBg").value,
       spineBg: $("spineBg").value,
       spineColor: $("spineColor").value,
@@ -405,8 +445,49 @@
     return lines;
   }
 
+  // 思源黑体/宋体 与 Noto Sans/Serif SC 是 Adobe 与 Google 联合开发的同一套字形，仅命名不同
+  var FONT_ALIAS = {
+    "Source Han Sans SC":  ["Noto Sans SC", "Noto Sans CJK SC"],
+    "Source Han Serif SC": ["Noto Serif SC", "Noto Serif CJK SC"],
+    "Noto Sans SC":        ["Source Han Sans SC", "Noto Sans CJK SC"],
+    "Noto Serif SC":       ["Source Han Serif SC", "Noto Serif CJK SC"]
+  };
+
+  var _probeCtx = null;
+  var _availCache = {};
+  function fontAvailable(name){
+    if(Object.prototype.hasOwnProperty.call(_availCache, name)) return _availCache[name];
+    if(!_probeCtx) _probeCtx = document.createElement("canvas").getContext("2d");
+    var SAMPLE = "\u96e8\u843d\u5728\u6211\u8eab\u4e0a\u7684ABCabc123\u6c38\u5b57";
+    var generics = ["sans-serif", "serif", "monospace"];
+    var ok = false;
+    for(var i=0;i<generics.length;i++){
+      // 基准必须用不加引号的通用族关键字；加引号会被当成字体名而回退到默认字体，造成全部误判为可用
+      _probeCtx.font = "80px " + generics[i];
+      var base = _probeCtx.measureText(SAMPLE).width;
+      _probeCtx.font = '80px "' + name + '", ' + generics[i];
+      if(Math.abs(_probeCtx.measureText(SAMPLE).width - base) > 0.5){ ok = true; break; }
+    }
+    _availCache[name] = ok;
+    return ok;
+  }
+
+  function fontUsable(name){
+    if(fontAvailable(name)) return true;
+    var alts = FONT_ALIAS[name] || [];
+    for(var i=0;i<alts.length;i++){ if(fontAvailable(alts[i])) return true; }
+    return false;
+  }
+
+  function resolveFont(name){
+    if(fontAvailable(name)) return name;
+    var alts = FONT_ALIAS[name] || [];
+    for(var i=0;i<alts.length;i++){ if(fontAvailable(alts[i])) return alts[i]; }
+    return name;
+  }
+
   function fontStr(font, sizePx, bold){
-    return (bold?"bold ":"") + sizePx + "px \"" + font + "\", serif";
+    return (bold?"bold ":"") + sizePx + "px \"" + resolveFont(font) + "\", serif";
   }
 
   function ptToMm(pt){ return pt * (25.4/72); }
@@ -546,6 +627,7 @@
       if(titleAlign === "left"){ titleAX = (fc.x + titleSideM)*ppm; g.textAlign = "left"; }
       else if(titleAlign === "right"){ titleAX = (fc.x + fc.w - titleSideM)*ppm; g.textAlign = "right"; }
       else { titleAX = (fc.x + fc.w/2)*ppm; g.textAlign = "center"; }
+      titleAX += c.titleOffsetX * ppm;
       titleLines = wrapText(g, c.title, titleMaxW*ppm);
       g.fillStyle = c.titleColor;
       g.textBaseline = "top";
@@ -576,11 +658,11 @@
         if(c.authorAlign === "left"){ vAX = (fc.x + fc.w*0.07)*ppm; vAlign = "left"; }
         else if(c.authorAlign === "right"){ vAX = (fc.x + fc.w - fc.w*0.07)*ppm; vAlign = "right"; }
         else { vAX = (fc.x + fc.w/2)*ppm; vAlign = "center"; }
-        drawAuthorVertical(g, c.author, vAX, (fc.y + c.authorVTop)*ppm, auSize*ppm, c.bodyFont, c.bodyColor, vAlign, authorHalo, auSize*ppm*0.12);
+        drawAuthorVertical(g, c.author, vAX, (fc.y + c.authorVTop)*ppm, auSize*ppm, c.bodyFont, c.authorColor, vAlign, authorHalo, auSize*ppm*0.12);
       } else {
-        var auY = fc.y + h*0.80;
+        var auY = fc.y + c.authorHTop;
         g.font = fontStr(c.bodyFont, auSize*ppm, false);
-        g.fillStyle = c.bodyColor;
+        g.fillStyle = c.authorColor;
         g.textBaseline = "top";
         var auAX;
         if(c.authorAlign === "left"){ auAX = (fc.x + fc.w*0.07)*ppm; g.textAlign = "left"; }
@@ -636,8 +718,14 @@
     var bm = c.textSideMargin;
     var bodySize = ptToMm(c.bodySizePt);
     var lineH = bodySize*1.7;
-    g.font = fontStr(c.bodyFont, bodySize*ppm, false);
-    drawTextBlock(g, c.backCoverText, (bc.x+bm)*ppm, (bc.y+topM)*ppm, (bc.w-2*bm)*ppm, lineH*ppm, c.bodyFont, bodySize*ppm, c.bodyColor, "left", false);
+    var bcTextTop = bc.y + c.backCoverTextTop;
+    var bcTextH = c.backCoverTextH;
+    g.save();
+    g.beginPath();
+    g.rect((bc.x+bm)*ppm, bcTextTop*ppm, (bc.w-2*bm)*ppm, bcTextH*ppm);
+    g.clip();
+    drawTextBlock(g, c.backCoverText, (bc.x+bm)*ppm, bcTextTop*ppm, (bc.w-2*bm)*ppm, lineH*ppm, c.bodyFont, bodySize*ppm, c.bodyColor, "left", false);
+    g.restore();
 
     // ===== 前勒口（作者介绍）=====
     var ff = R.frontFlap;
@@ -650,7 +738,7 @@
       var imgW = Math.min(c.frontFlapImageW, ff.w - 2*fm);
       var ratio = (frontFlapImageEl.naturalHeight || 1) / (frontFlapImageEl.naturalWidth || 1);
       var imgH = imgW * ratio;
-      flapImgRect = {x: ff.x + (ff.w - imgW)/2, y: ff.y + topM, w: imgW, h: imgH};
+      flapImgRect = {x: ff.x + fm, y: ff.y + topM, w: imgW, h: imgH};
       drawImageFit(g, frontFlapImageEl, flapImgRect, "contain", ppm);
       flapTextY = flapImgRect.y + flapImgRect.h + fSize*1.2;
     }
@@ -679,7 +767,7 @@
       // 文字框虚线
       g.strokeStyle = "rgba(0,150,80,0.6)";
       g.setLineDash([3,3]);
-      g.strokeRect((bc.x+bm)*ppm,(bc.y+topM)*ppm,(bc.w-2*bm)*ppm,(bc.h-bm-topM)*ppm);
+      g.strokeRect((bc.x+bm)*ppm, bcTextTop*ppm, (bc.w-2*bm)*ppm, bcTextH*ppm);
       g.strokeRect((ff.x+fm)*ppm, flapTextY*ppm, (ff.w-2*fm)*ppm, (ff.h-fm-(flapTextY-ff.y))*ppm);
       g.strokeRect((bf.x+fm)*ppm,(bf.y+topM)*ppm,(bf.w-2*fm)*ppm,(bf.h-fm-topM)*ppm);
       g.strokeStyle = "rgba(180,90,0,0.7)";
@@ -837,9 +925,9 @@
   // ---------- 事件绑定 ----------
   var ids = ["coverW","coverH","spineW","flapW","bleed","title","subtitle","author","slogan",
     "publisher","spineTitle","spineAuthor","frontFlapText","backCoverText","backFlapText",
-    "bodyFont","titleFont","bodyColor","titleColor","coverBg","spineBg","spineColor",
-    "frontFlapBg","backCoverBg","backFlapBg","imageMode","titleAlign","subtitleAlign","authorAlign","sloganAlign",
-    "titleSizePt","subtitleSizePt","authorSizePt","sloganSizePt","bodySizePt","flapSizePt","spineSizePt","textTopMargin","textSideMargin","frontFlapImageW","titleTopMargin","bottomImgTop","bottomImgH","sloganTop","authorVTop"];
+    "bodyFont","titleFont","bodyColor","titleColor","authorColor","coverBg","spineBg","spineColor",
+    "frontFlapBg","backCoverBg","backFlapBg","imageMode","titleAlign","titleOffsetX","subtitleAlign","authorAlign","sloganAlign",
+    "titleSizePt","subtitleSizePt","authorSizePt","sloganSizePt","bodySizePt","flapSizePt","spineSizePt","textTopMargin","textSideMargin","frontFlapImageW","titleTopMargin","bottomImgTop","bottomImgH","sloganTop","authorHTop","authorVTop","backCoverTextTop","backCoverTextH"];
   ids.forEach(function(id){
     var el = $(id);
     el.addEventListener("input", redraw);
@@ -868,20 +956,26 @@
   }
   $("titlePos").addEventListener("change", function(){ updateTitleTopVisibility(); redraw(); });
   function updateAuthorLayoutVisibility(){
-    $("authorVTopWrap").style.display = $("authorLayout").value === "vertical" ? "" : "none";
+    var vertical = $("authorLayout").value === "vertical";
+    $("authorVTopWrap").style.display = vertical ? "" : "none";
+    $("authorHTopWrap").style.display = vertical ? "none" : "";
   }
   $("authorLayout").addEventListener("change", function(){ updateAuthorLayoutVisibility(); redraw(); });
-  function handleImageUpload(e, setter){
+  function handleImageUpload(e, cb){
     var f = e.target.files && e.target.files[0];
     if(!f) return;
-    var url = URL.createObjectURL(f);
-    var img = new Image();
-    img.onload = function(){ setter(img); URL.revokeObjectURL(url); redraw(); };
-    img.src = url;
+    var reader = new FileReader();
+    reader.onload = function(){
+      var dataUrl = reader.result;
+      var img = new Image();
+      img.onload = function(){ cb(img, dataUrl); redraw(); };
+      img.src = dataUrl;
+    };
+    reader.readAsDataURL(f);
   }
-  $("coverImage").addEventListener("change", function(e){ handleImageUpload(e, function(im){ coverImageEl = im; }); });
-  $("coverFullImage").addEventListener("change", function(e){ handleImageUpload(e, function(im){ coverFullImageEl = im; }); });
-  $("frontFlapImage").addEventListener("change", function(e){ handleImageUpload(e, function(im){ frontFlapImageEl = im; }); });
+  $("coverImage").addEventListener("change", function(e){ handleImageUpload(e, function(im, du){ coverImageEl = im; coverImageDataUrl = du; }); });
+  $("coverFullImage").addEventListener("change", function(e){ handleImageUpload(e, function(im, du){ coverFullImageEl = im; coverFullImageDataUrl = du; }); });
+  $("frontFlapImage").addEventListener("change", function(e){ handleImageUpload(e, function(im, du){ frontFlapImageEl = im; frontFlapImageDataUrl = du; }); });
   function updateImageWrapVisibility(){
     var m = $("coverImageMode").value;
     $("halfImageWrap").style.display = (m === "half" || m === "bottom") ? "" : "none";
@@ -889,8 +983,103 @@
     $("bottomImageWrap").style.display = (m === "bottom") ? "" : "none";
   }
   $("coverImageMode").addEventListener("change", function(){ updateImageWrapVisibility(); redraw(); });
+
+  function filterFontOptions(){
+    var hiddenList = [];
+    ["bodyFont","titleFont"].forEach(function(id){
+      var sel = $(id);
+      if(!sel) return;
+      var firstUsable = null;
+      for(var i=0;i<sel.options.length;i++){
+        var op = sel.options[i];
+        var usable = fontUsable(op.value);
+        op.hidden = !usable;
+        op.disabled = !usable;
+        if(usable){
+          if(firstUsable === null) firstUsable = op.value;
+        } else if(hiddenList.indexOf(op.value) < 0){
+          hiddenList.push(op.value);
+        }
+      }
+      if(!fontUsable(sel.value) && firstUsable !== null) sel.value = firstUsable;
+    });
+    var hint = $("fontFilterHint");
+    if(hint){
+      hint.textContent = hiddenList.length
+        ? "已自动隐藏 " + hiddenList.length + " 款本机未安装的字体，避免选中后静默回退成宋体。"
+        : "本机字体全部可用，未隐藏任何选项。";
+    }
+    return hiddenList;
+  }
+
   $("download").addEventListener("click", download);
   $("downloadPdf").addEventListener("click", downloadPdf);
+
+  // ---------- 工程保存 / 打开 ----------
+  function saveProject(){
+    var data = { version: 1, config: cfg(), images: {
+      coverImage: coverImageDataUrl || null,
+      coverFullImage: coverFullImageDataUrl || null,
+      frontFlapImage: frontFlapImageDataUrl || null
+    }};
+    var json = JSON.stringify(data);
+    var blob = new Blob([json], {type: "application/json"});
+    var name = (cfg().title || "未命名").replace(/[\\/:*?"<>|]/g, "");
+    downloadBlob(blob, "封面工程_" + name + ".json");
+  }
+
+  function applyConfig(obj){
+    for(var k in obj){
+      var el = $(k);
+      if(!el) continue;
+      if(el.type === "checkbox"){ el.checked = !!obj[k]; }
+      else { el.value = obj[k]; }
+    }
+    updateImageWrapVisibility();
+    updateSpineAuthorVisibility();
+    updateFrontFlapImageVisibility();
+    updateTitleTopVisibility();
+    updateAuthorLayoutVisibility();
+    filterFontOptions();
+  }
+
+  function applyImages(imgs){
+    coverImageDataUrl = (imgs && imgs.coverImage) || null;
+    coverFullImageDataUrl = (imgs && imgs.coverFullImage) || null;
+    frontFlapImageDataUrl = (imgs && imgs.frontFlapImage) || null;
+    coverImageEl = coverFullImageEl = frontFlapImageEl = null;
+    function load(dataUrl, setter){
+      if(!dataUrl) return;
+      var img = new Image();
+      img.onload = function(){ setter(img); redraw(); };
+      img.src = dataUrl;
+    }
+    load(coverImageDataUrl, function(im){ coverImageEl = im; });
+    load(coverFullImageDataUrl, function(im){ coverFullImageEl = im; });
+    load(frontFlapImageDataUrl, function(im){ frontFlapImageEl = im; });
+    redraw();
+  }
+
+  $("saveProject").addEventListener("click", saveProject);
+  $("openProjectBtn").addEventListener("click", function(){ $("openProject").click(); });
+  $("openProject").addEventListener("change", function(e){
+    var f = e.target.files && e.target.files[0];
+    if(!f) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      try {
+        var data = JSON.parse(reader.result);
+        applyConfig(data.config || {});
+        applyImages(data.images || {});
+        redraw();
+      } catch(err){
+        alert("工程文件解析失败：" + err.message);
+      }
+    };
+    reader.readAsText(f, "utf-8");
+    e.target.value = "";
+  });
+
   window.addEventListener("resize", redraw);
 
   updateImageWrapVisibility();
@@ -898,6 +1087,7 @@
   updateFrontFlapImageVisibility();
   updateTitleTopVisibility();
   updateAuthorLayoutVisibility();
+  filterFontOptions();
   redraw();
 })();
 </script>
