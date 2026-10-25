@@ -87,6 +87,7 @@
       <option value="left">左对齐</option>
       <option value="right">右对齐</option>
     </select>
+    <div class="check"><input type="checkbox" id="titleBold" checked><label for="titleBold">书名加粗</label></div>
     <label>书名左右偏移（毫米，负值向左）</label>
     <input type="number" id="titleOffsetX" value="0" min="-200" max="200" step="1">
     <label>书名（可换行）</label>
@@ -241,7 +242,9 @@
         <option value="Noto Serif SC">思源宋体 Noto</option>
         <option value="Noto Sans SC">思源黑体 Noto</option>
         <option value="LXGW WenKai">霞鹜文楷</option>
+        <option value="LXGW 975 Yuan SC">975圆体</option>
         <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
+        <option value="HelloFont GuoGuoTi">字由果果体</option>
         <option value="ZCOOL XiaoWei">站酷小薇体</option>
         <option value="ZCOOL QingKe HuangYou">站酷庆科黄油体</option>
         <option value="ZCOOL KuaiLe">站酷快乐体</option>
@@ -275,7 +278,9 @@
         <option value="Noto Serif SC">思源宋体 Noto</option>
         <option value="Noto Sans SC">思源黑体 Noto</option>
         <option value="LXGW WenKai">霞鹜文楷</option>
+        <option value="LXGW 975 Yuan SC">975圆体</option>
         <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
+        <option value="HelloFont GuoGuoTi">字由果果体</option>
         <option value="ZCOOL XiaoWei">站酷小薇体</option>
         <option value="ZCOOL QingKe HuangYou">站酷庆科黄油体</option>
         <option value="ZCOOL KuaiLe">站酷快乐体</option>
@@ -344,6 +349,7 @@
       title:  $("title").value,
       titlePos: $("titlePos").value,
       titleAlign: $("titleAlign").value,
+      titleBold: $("titleBold").checked,
       titleOffsetX: (function(v){ v = parseFloat($("titleOffsetX").value); return isNaN(v) ? 0 : v; })(),
       titleTopMargin: parseFloat($("titleTopMargin").value)||36,
       bottomImgTop: parseFloat($("bottomImgTop").value)||136,
@@ -450,7 +456,9 @@
     "Source Han Sans SC":  ["Noto Sans SC", "Noto Sans CJK SC"],
     "Source Han Serif SC": ["Noto Serif SC", "Noto Serif CJK SC"],
     "Noto Sans SC":        ["Source Han Sans SC", "Noto Sans CJK SC"],
-    "Noto Serif SC":       ["Source Han Serif SC", "Noto Serif CJK SC"]
+    "Noto Serif SC":       ["Source Han Serif SC", "Noto Serif CJK SC"],
+    "LXGW 975 Yuan SC":    ["LXGW 975 Yuan SC 400W"],
+    "HelloFont GuoGuoTi":  ["字由果果体"]
   };
 
   var _probeCtx = null;
@@ -607,11 +615,9 @@
       }
     }
 
-    // 书名/副标题叠在图片上时加白色描边提升可读性（整张铺满，或半图模式下书名在上方）
-    var titleOnImage = (coverMode === "full" && !!coverFullImageEl) || (coverMode === "half" && !!coverImageEl && c.titlePos === "top");
-    var halo = titleOnImage ? "rgba(255,255,255,0.85)" : null;
-    var authorOnImage = (coverMode === "full" && !!coverFullImageEl) || (coverMode === "bottom" && !!coverImageEl);
-    var authorHalo = authorOnImage ? "rgba(255,255,255,0.85)" : null;
+    // 文字描边已移除：书名/副标题/作者/广告语不再叠加白色描边
+    var halo = null;
+    var authorHalo = null;
 
     // 书名（页面上方 / 腰部）
     var titleY = fc.y + (c.titlePos === "top" ? c.titleTopMargin : h*0.52);
@@ -619,7 +625,7 @@
     var titleLineH = titleSize*1.25;
     var titleLines = [];
     if(c.coverShowTitle){
-      g.font = fontStr(c.titleFont, titleSize*ppm, true);
+      g.font = fontStr(c.titleFont, titleSize*ppm, c.titleBold);
       var titleMaxW = fc.w*0.86;
       var titleSideM = fc.w*0.07;
       var titleAlign = c.titleAlign || "center";
@@ -690,7 +696,7 @@
     var sp = R.spine;
     var spineTitle = c.spineSameTitle ? c.title : c.spineTitle;
     var spineAuthor = c.spineSameAuthor ? c.author : c.spineAuthor;
-    var spineSize = Math.min(sp.w*0.5, ptToMm(c.spineSizePt));
+    var spineSize = Math.min(sp.w*0.9, ptToMm(c.spineSizePt));
     var spineCX = (sp.x + sp.w/2)*ppm;
     var spineTop = sp.y*ppm;
     var spineMaxH = sp.h*ppm;
@@ -934,7 +940,7 @@
     el.addEventListener("change", redraw);
   });
   ["spineSameTitle","spineShowAuthor","showGuides","exportBleed","exportGuides",
-   "coverShowTitle","coverShowSubtitle","coverShowAuthor","coverShowSlogan"].forEach(function(id){
+   "coverShowTitle","coverShowSubtitle","coverShowAuthor","coverShowSlogan","titleBold"].forEach(function(id){
     $(id).addEventListener("change", function(){ redraw(); });
   });
   $("spineSameTitle").addEventListener("change", function(){
