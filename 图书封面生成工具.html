@@ -100,6 +100,8 @@
       <option value="left">左对齐</option>
       <option value="right">右对齐</option>
     </select>
+    <label>副标题顶部位置（毫米）</label>
+    <input type="number" id="subtitleTop" value="145" min="0" max="300" step="1">
     <label>作者</label>
     <input type="text" id="author" value="陆庆屹/著">
     <label>作者对齐</label>
@@ -166,6 +168,7 @@
     <div class="colorline"><span>封面底色</span><input type="color" id="coverBg" value="#ffffff"></div>
     <div class="colorline"><span>书名颜色</span><input type="color" id="titleColor" value="#000000"></div>
     <div class="colorline"><span>作者颜色</span><input type="color" id="authorColor" value="#000000"></div>
+    <div class="colorline"><span>副标题颜色</span><input type="color" id="subtitleColor" value="#000000"></div>
 
     <h2>书脊</h2>
     <div class="check"><input type="checkbox" id="spineSameTitle" checked><label for="spineSameTitle" style="margin:0">书脊书名与封面一致</label></div>
@@ -237,7 +240,7 @@
         <option value="FZYaoTi">方正姚体</option>
         <option value="PingFang SC">苹方</option>
         <option value="Hiragino Sans GB">冬青黑体</option>
-        <option value="Source Han Serif SC">思源宋体</option>
+        <option value="Source Han Serif CN">思源宋体</option>
         <option value="Source Han Sans SC">思源黑体</option>
         <option value="Noto Serif SC">思源宋体 Noto</option>
         <option value="Noto Sans SC">思源黑体 Noto</option>
@@ -245,9 +248,11 @@
         <option value="LXGW 975 Yuan SC">975圆体</option>
         <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
         <option value="HelloFont GuoGuoTi">字由果果体</option>
-        <option value="ZCOOL XiaoWei">站酷小薇体</option>
-        <option value="ZCOOL QingKe HuangYou">站酷庆科黄油体</option>
-        <option value="ZCOOL KuaiLe">站酷快乐体</option>
+        <option value="xiaowei">站酷小薇体</option>
+        <option value="zcoolqingkehuangyouti">站酷庆科黄油体</option>
+        <option value="HappyZcool-2016">站酷快乐体</option>
+        <option value="JasonHandwriting9">清松手写体</option>
+        <option value="Muyao-Softbrush">木瑶软笔</option>
       </select></div>
       <div><label>书名字体</label><select id="titleFont">
         <option value="SimSun">宋体</option>
@@ -273,7 +278,7 @@
         <option value="FZYaoTi">方正姚体</option>
         <option value="PingFang SC">苹方</option>
         <option value="Hiragino Sans GB">冬青黑体</option>
-        <option value="Source Han Serif SC">思源宋体</option>
+        <option value="Source Han Serif CN">思源宋体</option>
         <option value="Source Han Sans SC">思源黑体</option>
         <option value="Noto Serif SC">思源宋体 Noto</option>
         <option value="Noto Sans SC">思源黑体 Noto</option>
@@ -281,12 +286,55 @@
         <option value="LXGW 975 Yuan SC">975圆体</option>
         <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
         <option value="HelloFont GuoGuoTi">字由果果体</option>
-        <option value="ZCOOL XiaoWei">站酷小薇体</option>
-        <option value="ZCOOL QingKe HuangYou">站酷庆科黄油体</option>
-        <option value="ZCOOL KuaiLe">站酷快乐体</option>
+        <option value="xiaowei">站酷小薇体</option>
+        <option value="zcoolqingkehuangyouti">站酷庆科黄油体</option>
+        <option value="HappyZcool-2016">站酷快乐体</option>
+        <option value="JasonHandwriting9">清松手写体</option>
+        <option value="Muyao-Softbrush">木瑶软笔</option>
       </select></div>
     </div>
     <div class="hint" id="fontFilterHint"></div>
+    <div class="row">
+      <div><label>副标题字体</label><select id="subtitleFont">
+        <option value="SimSun">宋体</option>
+        <option value="NSimSun">新宋体</option>
+        <option value="SimHei">黑体</option>
+        <option value="KaiTi">楷体</option>
+        <option value="FangSong" selected>仿宋</option>
+        <option value="Microsoft YaHei">微软雅黑</option>
+        <option value="DengXian">等线</option>
+        <option value="YouYuan">幼圆</option>
+        <option value="STZhongsong">华文中宋</option>
+        <option value="STKaiti">华文楷体</option>
+        <option value="STFangsong">华文仿宋</option>
+        <option value="STXihei">华文细黑</option>
+        <option value="STSong">华文宋体</option>
+        <option value="STXingkai">华文行楷</option>
+        <option value="STLiti">华文隶书</option>
+        <option value="STXinwei">华文新魏</option>
+        <option value="STCaiyun">华文彩云</option>
+        <option value="STHupo">华文琥珀</option>
+        <option value="LiSu">隶书</option>
+        <option value="FZShuTi">方正舒体</option>
+        <option value="FZYaoTi">方正姚体</option>
+        <option value="PingFang SC">苹方</option>
+        <option value="Hiragino Sans GB">冬青黑体</option>
+        <option value="Source Han Serif CN">思源宋体</option>
+        <option value="Source Han Sans SC">思源黑体</option>
+        <option value="Noto Serif SC">思源宋体 Noto</option>
+        <option value="Noto Sans SC">思源黑体 Noto</option>
+        <option value="LXGW WenKai">霞鹜文楷</option>
+        <option value="LXGW 975 Yuan SC">975圆体</option>
+        <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
+        <option value="HelloFont GuoGuoTi">字由果果体</option>
+        <option value="xiaowei">站酷小薇体</option>
+        <option value="zcoolqingkehuangyouti">站酷庆科黄油体</option>
+        <option value="HappyZcool-2016">站酷快乐体</option>
+        <option value="JasonHandwriting9">清松手写体</option>
+        <option value="Muyao-Softbrush">木瑶软笔</option>
+      </select></div>
+      <div></div>
+    </div>
     <div class="row">
       <div><label>书名大小（磅）</label><input type="number" id="titleSizePt" value="48.5" min="8" max="300" step="0.5"></div>
       <div><label>副标题大小（磅）</label><input type="number" id="subtitleSizePt" value="24" min="6" max="120" step="0.5"></div>
@@ -356,6 +404,9 @@
       bottomImgH: parseFloat($("bottomImgH").value)||81,
       subtitle: $("subtitle").value,
       subtitleAlign: $("subtitleAlign").value,
+      subtitleTop: parseFloat($("subtitleTop").value)||145,
+      subtitleColor: $("subtitleColor").value,
+      subtitleFont: $("subtitleFont").value,
       author: $("author").value,
       authorAlign: $("authorAlign").value,
       authorLayout: $("authorLayout").value,
@@ -644,10 +695,10 @@
 
     // 副标题
     if(c.subtitle && c.coverShowSubtitle){
-      var subY = titleY + titleLines.length*titleLineH + h*0.03;
+      var subY = fc.y + c.subtitleTop;
       var subSize = ptToMm(c.subtitleSizePt);
-      g.font = fontStr(c.bodyFont, subSize*ppm, false);
-      g.fillStyle = c.bodyColor;
+      g.font = fontStr(c.subtitleFont, subSize*ppm, false);
+      g.fillStyle = c.subtitleColor;
       g.textBaseline = "top";
       var subAX;
       if(c.subtitleAlign === "left"){ subAX = (fc.x + fc.w*0.07)*ppm; g.textAlign = "left"; }
@@ -931,9 +982,9 @@
   // ---------- 事件绑定 ----------
   var ids = ["coverW","coverH","spineW","flapW","bleed","title","subtitle","author","slogan",
     "publisher","spineTitle","spineAuthor","frontFlapText","backCoverText","backFlapText",
-    "bodyFont","titleFont","bodyColor","titleColor","authorColor","coverBg","spineBg","spineColor",
+    "bodyFont","titleFont","subtitleFont","bodyColor","titleColor","authorColor","subtitleColor","coverBg","spineBg","spineColor",
     "frontFlapBg","backCoverBg","backFlapBg","imageMode","titleAlign","titleOffsetX","subtitleAlign","authorAlign","sloganAlign",
-    "titleSizePt","subtitleSizePt","authorSizePt","sloganSizePt","bodySizePt","flapSizePt","spineSizePt","textTopMargin","textSideMargin","frontFlapImageW","titleTopMargin","bottomImgTop","bottomImgH","sloganTop","authorHTop","authorVTop","backCoverTextTop","backCoverTextH"];
+    "titleSizePt","subtitleSizePt","authorSizePt","sloganSizePt","bodySizePt","flapSizePt","spineSizePt","textTopMargin","textSideMargin","frontFlapImageW","titleTopMargin","bottomImgTop","bottomImgH","sloganTop","authorHTop","authorVTop","backCoverTextTop","backCoverTextH","subtitleTop"];
   ids.forEach(function(id){
     var el = $(id);
     el.addEventListener("input", redraw);
@@ -992,7 +1043,7 @@
 
   function filterFontOptions(){
     var hiddenList = [];
-    ["bodyFont","titleFont"].forEach(function(id){
+    ["bodyFont","titleFont","subtitleFont"].forEach(function(id){
       var sel = $(id);
       if(!sel) return;
       var firstUsable = null;
