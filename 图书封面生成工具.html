@@ -149,6 +149,9 @@
     <div id="halfImageWrap">
       <label>封面图片（可替换，用于上/下半部分）</label>
       <input type="file" id="coverImage" accept="image/*">
+      <label for="coverImageW">图片宽度（毫米）</label>
+      <input type="number" id="coverImageW" min="1" step="0.5" placeholder="自动（保持默认宽度）">
+      <div class="hint">上、下半部分图片共用，水平居中；留空使用默认宽度，最大为封面宽度。高度保持原设置。</div>
     </div>
     <div id="fullImageWrap" style="display:none">
       <label>整张封面图（铺满整个封面区域）</label>
@@ -170,14 +173,34 @@
     <div class="colorline"><span>作者颜色</span><input type="color" id="authorColor" value="#000000"></div>
     <div class="colorline"><span>副标题颜色</span><input type="color" id="subtitleColor" value="#000000"></div>
 
+    <h2>封面短横线</h2>
+    <div class="check"><input type="checkbox" id="coverShowLine"><label for="coverShowLine">显示封面短横线</label></div>
+    <div class="row">
+      <div><label for="coverLineOffsetX">水平偏移（毫米）</label><input type="number" id="coverLineOffsetX" value="0" step="0.5"></div>
+      <div><label for="coverLineTop">距封面顶部（毫米）</label><input type="number" id="coverLineTop" value="130" min="0" step="0.5"></div>
+    </div>
+    <div class="row">
+      <div><label for="coverLineLength">横线长度（毫米）</label><input type="number" id="coverLineLength" value="20" min="0.5" step="0.5"></div>
+      <div><label for="coverLineThickness">横线粗细（毫米）</label><input type="number" id="coverLineThickness" value="0.4" min="0.1" step="0.1"></div>
+    </div>
+    <div class="colorline"><label for="coverLineColor" style="margin:0">横线颜色</label><input type="color" id="coverLineColor" value="#000000"></div>
+    <div class="hint">水平偏移为 0 时居中，负值向左、正值向右；顶部距离按横线中心计算。超出封面的部分不显示。</div>
+
     <h2>书脊</h2>
     <div class="check"><input type="checkbox" id="spineSameTitle" checked><label for="spineSameTitle" style="margin:0">书脊书名与封面一致</label></div>
     <div id="spineTitleWrap" style="display:none"><label>书脊书名</label><input type="text" id="spineTitle" value="落在我身上的雨"></div>
     <div class="check"><input type="checkbox" id="spineShowAuthor" checked><label for="spineShowAuthor" style="margin:0">书脊显示作者</label></div>
     <div class="check" id="spineSameAuthorWrap"><input type="checkbox" id="spineSameAuthor" checked><label for="spineSameAuthor" style="margin:0">书脊作者与封面一致</label></div>
     <div id="spineAuthorWrap" style="display:none"><label>书脊作者</label><input type="text" id="spineAuthor" value="陆庆屹/著"></div>
+    <div class="row">
+      <div><label for="spineTitleOffsetY">书名垂直偏移（毫米）</label><input type="number" id="spineTitleOffsetY" value="0" step="0.5"></div>
+      <div><label for="spineAuthorOffsetY">作者垂直偏移（毫米）</label><input type="number" id="spineAuthorOffsetY" value="0" step="0.5"></div>
+    </div>
+    <div class="hint">相对默认位置调节高度：负值向上，正值向下，0 恢复默认位置。</div>
     <label>出版社（可选，书脊底部）</label>
     <input type="text" id="publisher" value="">
+    <label for="spinePublisherOffsetY">出版社垂直偏移（毫米）</label>
+    <input type="number" id="spinePublisherOffsetY" value="0" step="0.5">
     <div class="colorline"><span>书脊底色</span><input type="color" id="spineBg" value="#ffffff"></div>
     <div class="colorline"><span>书脊文字</span><input type="color" id="spineColor" value="#000000"></div>
 
@@ -202,6 +225,19 @@
 我用 7 万字记录下了她从 1958 年到 2018 年整整 60 年的人生故事。我确信，只要她的故事还在，她就永远不会被遗忘。
 
 当女儿再问我：“妈妈，姥姥是谁呀？我想见见她。”我就跟她一起，翻开这本书，了解一下秀茹的一生。</textarea>
+    <div class="check"><input type="checkbox" id="backCoverShowImage"><label for="backCoverShowImage" style="margin:0">显示封底整张图片</label></div>
+    <div id="backCoverImageWrap" style="display:none">
+      <label>封底图片（可上传，铺满整个封底）</label>
+      <input type="file" id="backCoverImage" accept="image/*">
+      <div class="row">
+        <div><label>填充方式</label>
+          <select id="backCoverImageMode">
+            <option value="cover">铺满裁切（cover）</option>
+            <option value="contain">完整显示（contain）</option>
+          </select>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div><label>文字顶部位置（毫米）</label><input type="number" id="backCoverTextTop" value="20" min="0" max="250" step="1"></div>
       <div><label>文字区域高度（毫米）</label><input type="number" id="backCoverTextH" value="186" min="20" max="250" step="1"></div>
@@ -253,6 +289,7 @@
         <option value="HappyZcool-2016">站酷快乐体</option>
         <option value="JasonHandwriting9">清松手写体</option>
         <option value="Muyao-Softbrush">木瑶软笔</option>
+        <option value="三极行楷简体-粗">三极行楷简体-粗</option>
       </select></div>
       <div><label>书名字体</label><select id="titleFont">
         <option value="SimSun">宋体</option>
@@ -291,6 +328,7 @@
         <option value="HappyZcool-2016">站酷快乐体</option>
         <option value="JasonHandwriting9">清松手写体</option>
         <option value="Muyao-Softbrush">木瑶软笔</option>
+        <option value="三极行楷简体-粗">三极行楷简体-粗</option>
       </select></div>
     </div>
     <div class="hint" id="fontFilterHint"></div>
@@ -332,6 +370,7 @@
         <option value="HappyZcool-2016">站酷快乐体</option>
         <option value="JasonHandwriting9">清松手写体</option>
         <option value="Muyao-Softbrush">木瑶软笔</option>
+        <option value="三极行楷简体-粗">三极行楷简体-粗</option>
       </select></div>
       <div></div>
     </div>
@@ -386,6 +425,7 @@
   var coverImageEl = null;        var coverImageDataUrl = null;
   var coverFullImageEl = null;    var coverFullImageDataUrl = null;
   var frontFlapImageEl = null;    var frontFlapImageDataUrl = null;
+  var backCoverImageEl = null;    var backCoverImageDataUrl = null;
 
   function cfg(){
     var c = {
@@ -402,6 +442,7 @@
       titleTopMargin: parseFloat($("titleTopMargin").value)||36,
       bottomImgTop: parseFloat($("bottomImgTop").value)||136,
       bottomImgH: parseFloat($("bottomImgH").value)||81,
+      coverImageW: Math.max(0, parseFloat($("coverImageW").value) || 0),
       subtitle: $("subtitle").value,
       subtitleAlign: $("subtitleAlign").value,
       subtitleTop: parseFloat($("subtitleTop").value)||145,
@@ -420,6 +461,15 @@
       spineShowAuthor: $("spineShowAuthor").checked,
       spineSameAuthor: $("spineSameAuthor").checked,
       spineAuthor: $("spineAuthor").value,
+      spineTitleOffsetY: parseFloat($("spineTitleOffsetY").value) || 0,
+      spineAuthorOffsetY: parseFloat($("spineAuthorOffsetY").value) || 0,
+      spinePublisherOffsetY: parseFloat($("spinePublisherOffsetY").value) || 0,
+      coverShowLine: $("coverShowLine").checked,
+      coverLineOffsetX: parseFloat($("coverLineOffsetX").value) || 0,
+      coverLineTop: Math.max(0, parseFloat($("coverLineTop").value) || 0),
+      coverLineLength: Math.max(0.5, parseFloat($("coverLineLength").value) || 20),
+      coverLineThickness: Math.max(0.1, parseFloat($("coverLineThickness").value) || 0.4),
+      coverLineColor: $("coverLineColor").value,
       coverShowTitle: $("coverShowTitle").checked,
       coverShowSubtitle: $("coverShowSubtitle").checked,
       coverShowAuthor: $("coverShowAuthor").checked,
@@ -436,6 +486,8 @@
       textSideMargin: parseFloat($("textSideMargin").value)||16,
       backCoverTextTop: parseFloat($("backCoverTextTop").value)||20,
       backCoverTextH: parseFloat($("backCoverTextH").value)||186,
+      backCoverShowImage: $("backCoverShowImage").checked,
+      backCoverImageMode: $("backCoverImageMode").value,
       frontFlapText: $("frontFlapText").value,
       backCoverText: $("backCoverText").value,
       backFlapText: $("backFlapText").value,
@@ -502,8 +554,49 @@
     return lines;
   }
 
+  // 正文禁则：句末标点与前文绑定，左括号、左引号与后文绑定。
+  // 保留手动分段；英文单词、数字作为整体参与换行。
+  function wrapBodyText(ctx, text, maxW){
+    var noLineStart = /^[，。！？；：、,.!?;:%‰℃°）〕］｝〉》」』】〗〙〛’”»›…—～·)\]}]/u;
+    var noLineEnd = /[（〔［｛〈《「『【〖〘〚‘“«‹(\[{]$/u;
+    var lines = [];
+    text.split(/\r\n|\r|\n/).forEach(function(para){
+      var tokens = para.match(/[A-Za-z0-9]+(?:['’.-][A-Za-z0-9]+)*|\s+|[\s\S]/gu) || [];
+      var units = [];
+      tokens.forEach(function(token){
+        var last = units.length - 1;
+        // 标点前若有空格，也连同空格一起绑定到前一个文字单元。
+        if(noLineStart.test(token)){
+          var spaces = "";
+          while(last >= 0 && /^\s+$/.test(units[last])){
+            spaces = units.pop() + spaces;
+            last--;
+          }
+          if(last >= 0) units[last] += spaces + token;
+          else units.push(spaces + token);
+        } else if(last >= 0 && noLineEnd.test(units[last].trimEnd())){
+          units[last] += token;
+        } else {
+          units.push(token);
+        }
+      });
+      var line = "";
+      units.forEach(function(unit){
+        if(line && ctx.measureText(line + unit).width > maxW){
+          lines.push(line);
+          line = unit;
+        } else {
+          line += unit;
+        }
+      });
+      lines.push(line);
+    });
+    return lines;
+  }
+
   // 思源黑体/宋体 与 Noto Sans/Serif SC 是 Adobe 与 Google 联合开发的同一套字形，仅命名不同
   var FONT_ALIAS = {
+    "三极行楷简体-粗": ["SJxingkai-C Regular", "SJxingkai-C-Regular"],
     "Source Han Sans SC":  ["Noto Sans SC", "Noto Sans CJK SC"],
     "Source Han Serif SC": ["Noto Serif SC", "Noto Serif CJK SC"],
     "Noto Sans SC":        ["Source Han Sans SC", "Noto Sans CJK SC"],
@@ -556,10 +649,11 @@
     g.fillStyle = color;
     g.textAlign = align;
     g.textBaseline = "top";
-    var lines = wrapText(g, text, maxW);
+    var lines = wrapBodyText(g, text, maxW);
     var ax = x + (align==="center" ? maxW/2 : (align==="right" ? maxW : 0));
     for(var i=0;i<lines.length;i++){
-      g.fillText(lines[i], ax, y + i*lineH);
+      // 极窄文字框或超长英文单词仍限制在框内，避免溢出到相邻区域。
+      g.fillText(lines[i], ax, y + i*lineH, maxW);
     }
     return lines.length * lineH;
   }
@@ -646,8 +740,10 @@
     var fc = R.frontCover;
     var fcRect = {x: fc.x, y: fc.y, w: fc.w, h: fc.h};
     var imgM = h*0.045;
-    var imgRectTop = {x: fc.x + imgM, y: fc.y + imgM, w: fc.w - 2*imgM, h: h*0.44};
-    var imgRectBottom = {x: fc.x + imgM, y: fc.y + c.bottomImgTop, w: fc.w - 2*imgM, h: c.bottomImgH};
+    var imgW = Math.min(fc.w, c.coverImageW > 0 ? c.coverImageW : Math.max(1, fc.w - 2*imgM));
+    var imgX = fc.x + (fc.w - imgW)/2;
+    var imgRectTop = {x: imgX, y: fc.y + imgM, w: imgW, h: h*0.44};
+    var imgRectBottom = {x: imgX, y: fc.y + c.bottomImgTop, w: imgW, h: c.bottomImgH};
     var coverMode = c.coverImageMode || "half";
     var activeImgRect = null;
     if(coverMode === "full"){
@@ -743,6 +839,19 @@
       fillTextHalo(g, c.slogan, yrAX, yrY*ppm, authorHalo, yrSize*ppm*0.12);
     }
 
+    // 封面短横线（叠加在封面内容上，裁切到封面范围内）
+    if(c.coverShowLine){
+      var lineX = fc.x + fc.w/2 + c.coverLineOffsetX - c.coverLineLength/2;
+      var lineY = fc.y + c.coverLineTop - c.coverLineThickness/2;
+      g.save();
+      g.beginPath();
+      g.rect(fc.x*ppm, fc.y*ppm, fc.w*ppm, fc.h*ppm);
+      g.clip();
+      g.fillStyle = c.coverLineColor;
+      g.fillRect(lineX*ppm, lineY*ppm, c.coverLineLength*ppm, c.coverLineThickness*ppm);
+      g.restore();
+    }
+
     // ===== 书脊 =====
     var sp = R.spine;
     var spineTitle = c.spineSameTitle ? c.title : c.spineTitle;
@@ -754,11 +863,11 @@
     if(c.spineShowAuthor && spineAuthor){
       // 书名占上部 70%，作者占下部
       var titleH = spineMaxH*0.66;
-      drawVerticalText(g, spineTitle, spineCX, spineTop, titleH, c.titleFont, spineSize*ppm, c.spineColor, true);
+      drawVerticalText(g, spineTitle, spineCX, spineTop + c.spineTitleOffsetY*ppm, titleH, c.titleFont, spineSize*ppm, c.spineColor, true);
       var auSize = spineSize*0.6;
-      drawVerticalText(g, spineAuthor, spineCX, spineTop + titleH, spineMaxH*0.24, c.bodyFont, auSize*ppm, c.spineColor, false);
+      drawVerticalText(g, spineAuthor, spineCX, spineTop + titleH + c.spineAuthorOffsetY*ppm, spineMaxH*0.24, c.bodyFont, auSize*ppm, c.spineColor, false);
     } else {
-      drawVerticalText(g, spineTitle, spineCX, spineTop, spineMaxH, c.titleFont, spineSize*ppm, c.spineColor, true);
+      drawVerticalText(g, spineTitle, spineCX, spineTop + c.spineTitleOffsetY*ppm, spineMaxH, c.titleFont, spineSize*ppm, c.spineColor, true);
     }
     // 出版社（书脊底部，竖排小字）
     if(c.publisher){
@@ -767,7 +876,7 @@
       g.fillStyle = c.spineColor;
       g.textAlign = "center";
       g.textBaseline = "bottom";
-      g.fillText(c.publisher, spineCX, (sp.y+sp.h - h*0.03)*ppm);
+      g.fillText(c.publisher, spineCX, (sp.y+sp.h - h*0.03 + c.spinePublisherOffsetY)*ppm);
     }
 
     // ===== 封底（文字框）=====
@@ -777,6 +886,9 @@
     var lineH = bodySize*1.7;
     var bcTextTop = bc.y + c.backCoverTextTop;
     var bcTextH = c.backCoverTextH;
+    if(c.backCoverShowImage && backCoverImageEl){
+      drawImageFit(g, backCoverImageEl, bc, c.backCoverImageMode, ppm);
+    }
     g.save();
     g.beginPath();
     g.rect((bc.x+bm)*ppm, bcTextTop*ppm, (bc.w-2*bm)*ppm, bcTextH*ppm);
@@ -981,17 +1093,18 @@
 
   // ---------- 事件绑定 ----------
   var ids = ["coverW","coverH","spineW","flapW","bleed","title","subtitle","author","slogan",
-    "publisher","spineTitle","spineAuthor","frontFlapText","backCoverText","backFlapText",
+    "coverLineOffsetX","coverLineTop","coverLineLength","coverLineThickness","coverLineColor",
+    "publisher","spineTitle","spineAuthor","spineTitleOffsetY","spineAuthorOffsetY","spinePublisherOffsetY","frontFlapText","backCoverText","backFlapText",
     "bodyFont","titleFont","subtitleFont","bodyColor","titleColor","authorColor","subtitleColor","coverBg","spineBg","spineColor",
     "frontFlapBg","backCoverBg","backFlapBg","imageMode","titleAlign","titleOffsetX","subtitleAlign","authorAlign","sloganAlign",
-    "titleSizePt","subtitleSizePt","authorSizePt","sloganSizePt","bodySizePt","flapSizePt","spineSizePt","textTopMargin","textSideMargin","frontFlapImageW","titleTopMargin","bottomImgTop","bottomImgH","sloganTop","authorHTop","authorVTop","backCoverTextTop","backCoverTextH","subtitleTop"];
+    "titleSizePt","subtitleSizePt","authorSizePt","sloganSizePt","bodySizePt","flapSizePt","spineSizePt","textTopMargin","textSideMargin","frontFlapImageW","titleTopMargin","bottomImgTop","bottomImgH","coverImageW","sloganTop","authorHTop","authorVTop","backCoverTextTop","backCoverTextH","subtitleTop"];
   ids.forEach(function(id){
     var el = $(id);
     el.addEventListener("input", redraw);
     el.addEventListener("change", redraw);
   });
   ["spineSameTitle","spineShowAuthor","showGuides","exportBleed","exportGuides",
-   "coverShowTitle","coverShowSubtitle","coverShowAuthor","coverShowSlogan","titleBold"].forEach(function(id){
+   "coverShowLine","coverShowTitle","coverShowSubtitle","coverShowAuthor","coverShowSlogan","titleBold"].forEach(function(id){
     $(id).addEventListener("change", function(){ redraw(); });
   });
   $("spineSameTitle").addEventListener("change", function(){
@@ -1008,6 +1121,11 @@
     $("frontFlapImageWrap").style.display = $("frontFlapShowImage").checked ? "" : "none";
   }
   $("frontFlapShowImage").addEventListener("change", function(){ updateFrontFlapImageVisibility(); redraw(); });
+  function updateBackCoverImageVisibility(){
+    $("backCoverImageWrap").style.display = $("backCoverShowImage").checked ? "" : "none";
+  }
+  $("backCoverShowImage").addEventListener("change", function(){ updateBackCoverImageVisibility(); redraw(); });
+  $("backCoverImageMode").addEventListener("change", redraw);
   function updateTitleTopVisibility(){
     $("titleTopWrap").style.display = $("titlePos").value === "top" ? "" : "none";
   }
@@ -1033,6 +1151,7 @@
   $("coverImage").addEventListener("change", function(e){ handleImageUpload(e, function(im, du){ coverImageEl = im; coverImageDataUrl = du; }); });
   $("coverFullImage").addEventListener("change", function(e){ handleImageUpload(e, function(im, du){ coverFullImageEl = im; coverFullImageDataUrl = du; }); });
   $("frontFlapImage").addEventListener("change", function(e){ handleImageUpload(e, function(im, du){ frontFlapImageEl = im; frontFlapImageDataUrl = du; }); });
+  $("backCoverImage").addEventListener("change", function(e){ handleImageUpload(e, function(im, du){ backCoverImageEl = im; backCoverImageDataUrl = du; }); });
   function updateImageWrapVisibility(){
     var m = $("coverImageMode").value;
     $("halfImageWrap").style.display = (m === "half" || m === "bottom") ? "" : "none";
@@ -1077,7 +1196,8 @@
     var data = { version: 1, config: cfg(), images: {
       coverImage: coverImageDataUrl || null,
       coverFullImage: coverFullImageDataUrl || null,
-      frontFlapImage: frontFlapImageDataUrl || null
+      frontFlapImage: frontFlapImageDataUrl || null,
+      backCoverImage: backCoverImageDataUrl || null
     }};
     var json = JSON.stringify(data);
     var blob = new Blob([json], {type: "application/json"});
@@ -1086,15 +1206,25 @@
   }
 
   function applyConfig(obj){
+    // 旧工程默认不显示横线，避免沿用上一个工程的设置。
+    $("coverShowLine").checked = false;
+    var lineDefaults = {coverLineOffsetX:0, coverLineTop:130, coverLineLength:20, coverLineThickness:0.4, coverLineColor:"#000000"};
+    Object.keys(lineDefaults).forEach(function(id){ $(id).value = lineDefaults[id]; });
+    ["spineTitleOffsetY","spineAuthorOffsetY","spinePublisherOffsetY"].forEach(function(id){
+      $(id).value = parseFloat(obj[id]) || 0;
+    });
+    // 旧工程没有图片宽度设置，恢复原有的自动宽度。
+    $("coverImageW").value = obj.coverImageW > 0 ? obj.coverImageW : "";
     for(var k in obj){
       var el = $(k);
       if(!el) continue;
       if(el.type === "checkbox"){ el.checked = !!obj[k]; }
-      else { el.value = obj[k]; }
+      else { el.value = (k === "coverImageW" && !(obj[k] > 0)) ? "" : obj[k]; }
     }
     updateImageWrapVisibility();
     updateSpineAuthorVisibility();
     updateFrontFlapImageVisibility();
+    updateBackCoverImageVisibility();
     updateTitleTopVisibility();
     updateAuthorLayoutVisibility();
     filterFontOptions();
@@ -1104,7 +1234,8 @@
     coverImageDataUrl = (imgs && imgs.coverImage) || null;
     coverFullImageDataUrl = (imgs && imgs.coverFullImage) || null;
     frontFlapImageDataUrl = (imgs && imgs.frontFlapImage) || null;
-    coverImageEl = coverFullImageEl = frontFlapImageEl = null;
+    backCoverImageDataUrl = (imgs && imgs.backCoverImage) || null;
+    coverImageEl = coverFullImageEl = frontFlapImageEl = backCoverImageEl = null;
     function load(dataUrl, setter){
       if(!dataUrl) return;
       var img = new Image();
@@ -1114,6 +1245,7 @@
     load(coverImageDataUrl, function(im){ coverImageEl = im; });
     load(coverFullImageDataUrl, function(im){ coverFullImageEl = im; });
     load(frontFlapImageDataUrl, function(im){ frontFlapImageEl = im; });
+    load(backCoverImageDataUrl, function(im){ backCoverImageEl = im; });
     redraw();
   }
 
@@ -1142,6 +1274,7 @@
   updateImageWrapVisibility();
   updateSpineAuthorVisibility();
   updateFrontFlapImageVisibility();
+  updateBackCoverImageVisibility();
   updateTitleTopVisibility();
   updateAuthorLayoutVisibility();
   filterFontOptions();
