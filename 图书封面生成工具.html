@@ -3,419 +3,794 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>纸质图书封面生成工具</title>
+<title>书封工坊 · 图书封面排版工具</title>
 <style>
-  :root{
-    --border:#e2e2e2;
-    --bg:#f5f5f5;
-    --panel:#ffffff;
-    --accent:#b03a2e;
-    --text:#222;
-    --muted:#888;
-  }
-  *{box-sizing:border-box;}
-  body{margin:0;font-family:"Microsoft YaHei","PingFang SC",sans-serif;color:var(--text);background:var(--bg);}
-  header{background:var(--panel);border-bottom:1px solid var(--border);padding:14px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
-  header h1{font-size:18px;margin:0;}
-  header .dims{font-size:12px;color:var(--muted);}
-  .wrap{display:flex;gap:0;min-height:calc(100vh - 61px);}
-  .controls{width:360px;min-width:360px;background:var(--panel);border-right:1px solid var(--border);padding:16px 18px;overflow-y:auto;max-height:calc(100vh - 61px);}
-  .preview{flex:1;padding:20px;overflow:auto;}
-  .preview canvas{display:block;margin:0 auto;box-shadow:0 2px 16px rgba(0,0,0,.18);background:#fff;}
-  h2{font-size:13px;margin:18px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border);color:#333;}
-  h2:first-of-type{margin-top:0;}
-  label{display:block;font-size:12px;color:#555;margin:8px 0 3px;}
-  input[type=text],textarea,select{width:100%;padding:7px 9px;border:1px solid var(--border);border-radius:5px;font-size:13px;font-family:inherit;}
-  textarea{resize:vertical;min-height:64px;line-height:1.5;}
-  input[type=file]{font-size:12px;width:100%;}
-  input[type=color]{width:44px;height:28px;border:1px solid var(--border);border-radius:4px;padding:1px;background:#fff;cursor:pointer;}
-  input[type=range]{width:100%;}
-  .row{display:flex;gap:10px;align-items:flex-end;}
-  .row>div{flex:1;}
-  .inline{display:flex;align-items:center;gap:8px;margin-top:6px;}
-  .inline label{display:inline;margin:0;font-size:12px;}
-  .colorline{display:flex;align-items:center;gap:8px;margin-top:6px;}
-  .colorline span{font-size:12px;color:#555;width:64px;}
-  button{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:6px;font-size:14px;cursor:pointer;width:100%;}
-  button:hover{opacity:.92;}
-  button.secondary{background:#3a6ea5;margin-top:8px;}
-  .hint{font-size:11px;color:var(--muted);line-height:1.5;margin-top:6px;}
-  .check{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12px;color:#555;}
-  .check input{width:auto;}
-  .checks{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:6px;}
-  .checks .check{margin-top:4px;}
-  .sep{height:1px;background:var(--border);margin:16px 0;}
-  .badge{background:#eef3ff;color:#3355b0;border-radius:4px;padding:2px 8px;font-size:11px;}
+:root{--accent:#235d50;--paper:#f8f7f3;--muted:#71807b;--border:#e1e6df;--text:#283b35}
+*{box-sizing:border-box}body{margin:0;font:13px "Microsoft YaHei","PingFang SC",sans-serif;color:var(--text);background:var(--paper)}button,input,select,textarea{font:inherit}button{cursor:pointer}button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #91b9a6;outline-offset:2px}[hidden]{display:none!important}
+.app-header{height:64px;padding:0 20px;background:#fff;display:flex;align-items:center;gap:28px;border-bottom:1px solid var(--border)}.brand{display:flex;align-items:center;gap:12px}.brand-mark{display:grid;place-items:center;background:var(--accent);color:#fff;width:34px;height:38px;border-radius:5px 12px 5px 5px;font:24px serif}.brand h1{font-size:18px;letter-spacing:2px;margin:0 0 4px}.brand p{margin:0;font-size:11px;color:var(--muted)}.local-badge{font-size:11px;color:var(--muted)}.project-actions{margin-left:auto;display:flex;gap:10px;align-items:center}.project-actions button{background:white;color:var(--text);border:1px solid #cfd9d0;width:auto;padding:10px 16px;font-size:12px}.project-actions #saveProject{background:var(--accent);color:white;border-color:var(--accent)}.project-actions .secondary{margin:0}
+.workspace{display:grid;grid-template-columns:320px minmax(0,1fr);height:calc(100dvh - 64px)}.editor{display:flex;flex-direction:column;min-height:0;background:var(--paper);border-right:1px solid var(--border)}.section-nav{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:10px;background:#fff;border-bottom:1px solid var(--border)}.section-tab{display:flex;align-items:center;gap:8px;border:1px solid transparent;border-radius:6px;padding:9px 5px;background:transparent;color:#6c7b72;font-size:12px;text-align:left}.section-tab span{font-size:10px;color:#94a398}.section-tab:hover{background:#f2f5ef}.section-tab[aria-selected=true]{background:#e8f0e9;color:#245842;border-color:#d4e2d3;font-weight:700}.controls{overflow:auto;flex:1;min-height:0;padding:16px 12px;scrollbar-width:thin}.panel-heading{margin-bottom:14px}.eyebrow{font-size:9px;letter-spacing:1.8px;font-weight:700;color:#89998a}.panel-heading h2{font-size:20px;letter-spacing:1px;margin:7px 0 9px}.panel-heading p{font-size:12px;line-height:1.8;color:var(--muted);margin:0}.card{padding:14px;margin-bottom:10px;border:1px solid var(--border);border-radius:9px;background:#fff}.card h3{font-size:14px;margin:0 0 16px;display:flex;align-items:center;gap:8px}.card h3:before{content:"";height:12px;width:3px;background:#8aab8d;border-radius:2px}.hint{font-size:11px;line-height:1.85;color:var(--muted);margin:10px 0 0}.field{min-width:0;margin-bottom:12px}.field:last-child{margin-bottom:0}label{display:block;font-size:11px;color:#63746a;margin:0 0 7px;line-height:1.5}input[type=text],input[type=number],textarea,select{width:100%;min-width:0;border:1px solid #dce3dc;background:#fcfdfb;padding:9px 10px;border-radius:5px;color:#2d4437}input:hover,textarea:hover,select:hover{border-color:#9eafa0}textarea{resize:vertical;min-height:130px;line-height:1.8}#title{min-height:70px!important}input[type=file]{font-size:11px;width:100%;color:var(--muted);padding:4px 0}input[type=file]::file-selector-button{border:1px solid #dce3dc;border-radius:4px;padding:7px 10px;background:#f1f5ee;color:#385b46;margin-right:8px;cursor:pointer}input[type=color]{display:block;width:100%;height:36px;border:1px solid #dce3dc;border-radius:5px;padding:3px;background:#fcfdfb;cursor:pointer}.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.row>.field{margin-bottom:12px}.check{display:flex;align-items:center;gap:7px;margin:10px 0}.check input{accent-color:var(--accent);width:15px;height:15px;margin:0;flex-shrink:0}.check label{font-size:12px;margin:0;color:#516859;cursor:pointer}.checks{display:grid;grid-template-columns:1fr 1fr}.checks .check{margin:5px 0}.adjustments{border-top:1px solid #edf0eb;margin-top:14px;padding-top:12px}.adjustments summary{cursor:pointer;color:#6b7f6c;font-size:11px;list-style-position:inside;padding:3px 0}.adjustments>div{padding-top:14px}button{border:0;border-radius:5px;background:var(--accent);color:#fff;padding:12px 16px;width:100%}button:hover{filter:brightness(.96)}button.secondary{background:#edf2e9;color:#3e614a;margin-top:10px;border:1px solid #d5dfd0}.editor-foot{padding:11px;text-align:center;border-top:1px solid var(--border);font-size:10px;color:#8a978b;background:#fff}
+.preview-pane{min-width:0;min-height:0;display:flex;flex-direction:column;background:#eef0e9}.preview-toolbar{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;gap:12px}.preview-toolbar h2{font-size:15px;font-weight:500;letter-spacing:1px;margin:6px 0 0}.preview-toolbar .check label{font-size:11px}.preview-stage{flex:1;min-height:0;overflow:auto;padding:12px;display:flex;align-items:center;background-image:radial-gradient(#b9c5b6 .65px,transparent .65px);background-size:14px 14px}.artboard{width:100%;margin:auto}.panel-map{display:grid;grid-template-columns:105fr 143fr 15.5fr 143fr 105fr;margin:0 auto 8px;color:#84917e;font-size:10px;text-align:center}.panel-map span{white-space:nowrap}.panel-map span:nth-child(3){font-size:9px;writing-mode:vertical-rl;justify-self:center}.preview-stage canvas{display:block;margin:0 auto;background:#fff;box-shadow:0 12px 35px #273f3320,0 1px 3px #273f331f}.preview-footer{padding:9px 16px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;color:#788975;font-size:10px;line-height:1.8}.workflow-note{display:none;justify-content:center;align-items:center;gap:18px;padding:16px 20px 23px;color:#8c9985;font-size:10px}.workflow-note b{font-weight:400;color:#b5c0ad}
+@media(min-width:1600px){.workspace{grid-template-columns:340px minmax(0,1fr)}.controls{padding:18px 14px}}
+@media(max-width:1000px){.workspace{grid-template-columns:300px minmax(0,1fr)}.app-header{padding:0 18px;gap:14px}.local-badge{display:none}.controls{padding:20px 14px}.preview-toolbar{padding:12px 16px}.project-actions button{font-size:11px;padding:9px 12px}}
+@media(max-width:720px){.app-header{height:auto;min-height:114px;padding:16px;flex-wrap:wrap;gap:12px}.brand h1{font-size:18px}.brand-mark{width:34px;height:38px}.project-actions{margin-left:0;width:100%}.project-actions button{flex:1}.workspace{display:flex;flex-direction:column;height:auto}.editor{border-right:0;order:2}.controls{overflow:visible;max-height:none;padding:20px 16px}.section-nav{position:sticky;top:0;z-index:2}.preview-pane{order:1;min-height:300px}.preview-toolbar{padding:18px 20px 6px}.preview-stage{min-height:190px;padding:12px}.preview-footer{padding:10px 20px}.workflow-note{display:none}.editor-foot{padding:15px}.card{padding:16px}.panel-heading{margin-bottom:18px}}
 </style>
 </head>
 <body>
-<header>
-  <h1>纸质图书封面生成工具</h1>
-  <span class="dims">默认尺寸参考《秀茹的一生》外封：成品 143×226mm · 书脊 15.5mm · 勒口 105mm · 出血 3mm</span>
-  <span class="dims" id="liveDims"></span>
+<header class="app-header">
+<div class="brand">
+<span class="brand-mark" aria-hidden="true">册</span>
+<div>
+<h1>书封工坊</h1>
+<p>纸质图书封面排版工具</p>
+</div>
+</div>
+<span class="local-badge">● 本地编辑 · 离线可用</span>
+<div class="project-actions">
+<button id="openProjectBtn" class="secondary">打开工程（导入 .json）</button>
+<button id="saveProject">保存工程（导出 .json）</button>
+<input type="file" id="openProject" accept=".json,application/json" style="display:none">
+</div>
 </header>
-<div class="wrap">
-  <div class="controls">
-
-    <h2>尺寸设置（毫米）</h2>
-    <div class="row">
-      <div><label>封面宽</label><input type="number" id="coverW" value="143" min="80" max="400"></div>
-      <div><label>封面高</label><input type="number" id="coverH" value="226" min="120" max="400"></div>
-    </div>
-    <div class="row">
-      <div><label>书脊宽</label><input type="number" id="spineW" value="15.5" min="4" max="60" step="0.5"></div>
-      <div><label>勒口宽</label><input type="number" id="flapW" value="105" min="0" max="200"></div>
-    </div>
-    <div class="row">
-      <div><label>出血</label><input type="number" id="bleed" value="3" min="0" max="10" step="0.5"></div>
-      <div><label>导出 DPI</label><select id="dpi"><option value="150">150</option><option value="300" selected>300</option><option value="600">600</option></select></div>
-    </div>
-
-    <h2>封面</h2>
-    <label>书名位置</label>
-    <select id="titlePos">
+<div class="workspace">
+<aside class="editor" aria-label="封面编辑设置">
+<nav class="section-nav" role="tablist" aria-label="编辑分区">
+<button type="button" class="section-tab" id="tab-setup" role="tab" aria-controls="panel-setup" aria-selected="false" tabindex="-1">
+<span>01</span>尺寸与样式</button>
+<button type="button" class="section-tab" id="tab-front" role="tab" aria-controls="panel-front" aria-selected="false" tabindex="-1">
+<span>02</span>封面</button>
+<button type="button" class="section-tab" id="tab-spine" role="tab" aria-controls="panel-spine" aria-selected="false" tabindex="-1">
+<span>03</span>书脊</button>
+<button type="button" class="section-tab" id="tab-back" role="tab" aria-controls="panel-back" aria-selected="false" tabindex="-1">
+<span>04</span>封底</button>
+<button type="button" class="section-tab" id="tab-flaps" role="tab" aria-controls="panel-flaps" aria-selected="false" tabindex="-1">
+<span>05</span>前后勒口</button>
+<button type="button" class="section-tab" id="tab-export" role="tab" aria-controls="panel-export" aria-selected="false" tabindex="-1">
+<span>06</span>导出</button>
+</nav>
+<div class="controls">
+<section class="editor-panel" id="panel-setup" role="tabpanel" aria-labelledby="tab-setup">
+<div class="panel-heading">
+<span class="eyebrow">BOOK COVER STUDIO</span>
+<h2>尺寸与通用样式</h2>
+<p>先确定成品尺寸，再开始排版。尺寸单位为毫米。</p>
+</div>
+<section class="card">
+<h3>成品尺寸</h3>
+<div class="row">
+<div class="field">
+<label for="coverW">封面宽度</label>
+<input type="number" id="coverW" value="143" min="80" max="400">
+</div>
+<div class="field">
+<label for="coverH">封面高度</label>
+<input type="number" id="coverH" value="226" min="120" max="400">
+</div>
+</div>
+<div class="row">
+<div class="field">
+<label for="spineW">书脊宽度</label>
+<input type="number" id="spineW" value="15.5" min="4" max="60" step="0.5">
+</div>
+<div class="field">
+<label for="flapW">单侧勒口宽度</label>
+<input type="number" id="flapW" value="105" min="0" max="200">
+</div>
+</div>
+<div class="field">
+<label for="bleed">四周出血</label>
+<input type="number" id="bleed" value="3" min="0" max="10" step="0.5">
+</div>
+<p class="hint">出血是裁切外预留的区域，尺寸请与印厂确认。</p>
+</section>
+<section class="card">
+<h3>共用文字样式</h3>
+<div class="field">
+<label for="bodyFont">正文字体 · 封底、勒口、作者与广告语</label>
+<select id="bodyFont">
+        <option value="SimSun">宋体</option>
+        <option value="NSimSun">新宋体</option>
+        <option value="SimHei">黑体</option>
+        <option value="KaiTi">楷体</option>
+        <option value="FangSong" selected>仿宋</option>
+        <option value="Microsoft YaHei">微软雅黑</option>
+        <option value="DengXian">等线</option>
+        <option value="YouYuan">幼圆</option>
+        <option value="STZhongsong">华文中宋</option>
+        <option value="STKaiti">华文楷体</option>
+        <option value="STFangsong">华文仿宋</option>
+        <option value="STXihei">华文细黑</option>
+        <option value="STSong">华文宋体</option>
+        <option value="STXingkai">华文行楷</option>
+        <option value="STLiti">华文隶书</option>
+        <option value="STXinwei">华文新魏</option>
+        <option value="STCaiyun">华文彩云</option>
+        <option value="STHupo">华文琥珀</option>
+        <option value="LiSu">隶书</option>
+        <option value="FZShuTi">方正舒体</option>
+        <option value="FZYaoTi">方正姚体</option>
+        <option value="PingFang SC">苹方</option>
+        <option value="Hiragino Sans GB">冬青黑体</option>
+        <option value="Source Han Serif CN">思源宋体</option>
+        <option value="Source Han Sans SC">思源黑体</option>
+        <option value="Noto Serif SC">思源宋体 Noto</option>
+        <option value="Noto Sans SC">思源黑体 Noto</option>
+        <option value="LXGW WenKai">霞鹜文楷</option>
+        <option value="LXGW 975 Yuan SC">975圆体</option>
+        <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
+        <option value="HelloFont GuoGuoTi">字由果果体</option>
+        <option value="xiaowei">站酷小薇体</option>
+        <option value="zcoolqingkehuangyouti">站酷庆科黄油体</option>
+        <option value="HappyZcool-2016">站酷快乐体</option>
+        <option value="JasonHandwriting9">清松手写体</option>
+        <option value="Muyao-Softbrush">木瑶软笔</option>
+        <option value="三极行楷简体-粗">三极行楷简体-粗</option>
+      </select>
+</div>
+<div class="field">
+<label for="bodyColor">正文颜色</label>
+<input type="color" id="bodyColor" value="#000000">
+</div>
+<p class="hint" id="fontFilterHint">
+</p>
+<p class="hint">字体需在本机安装或激活。分享工程时，请同时告知所用字体。</p>
+</section>
+<section class="card">
+<h3>正文留白</h3>
+<div class="row">
+<div class="field">
+<label for="textTopMargin">前后勒口顶部留白</label>
+<input type="number" id="textTopMargin" value="20" min="0" max="100" step="1">
+</div>
+<div class="field">
+<label for="textSideMargin">封底与勒口左右留白</label>
+<input type="number" id="textSideMargin" value="16" min="0" max="80" step="1">
+</div>
+</div>
+<p class="hint">封底的文字顶部位置在「封底」中单独设置。</p>
+</section>
+</section>
+<section class="editor-panel" id="panel-front" role="tabpanel" aria-labelledby="tab-front">
+<div class="panel-heading">
+<span class="eyebrow">BOOK COVER STUDIO</span>
+<h2>封面</h2>
+<p>编辑读者第一眼看到的书名、图片和细节。</p>
+</div>
+<section class="card">
+<h3>显示内容</h3>
+<div class="checks">
+<div class="check">
+<input type="checkbox" id="coverShowTitle" checked>
+<label for="coverShowTitle">书名</label>
+</div>
+<div class="check">
+<input type="checkbox" id="coverShowSubtitle" checked>
+<label for="coverShowSubtitle">副标题</label>
+</div>
+<div class="check">
+<input type="checkbox" id="coverShowAuthor" checked>
+<label for="coverShowAuthor">作者</label>
+</div>
+<div class="check">
+<input type="checkbox" id="coverShowSlogan" checked>
+<label for="coverShowSlogan">广告语</label>
+</div>
+</div>
+</section>
+<section class="card">
+<h3>书名</h3>
+<div class="field">
+<label for="title">书名 · 支持手动换行</label>
+<textarea id="title" style="min-height:40px">落在我身上的雨</textarea>
+</div>
+<div class="row">
+<div class="field">
+<label for="titleFont">字体</label>
+<select id="titleFont">
+        <option value="SimSun">宋体</option>
+        <option value="NSimSun">新宋体</option>
+        <option value="SimHei">黑体</option>
+        <option value="KaiTi">楷体</option>
+        <option value="FangSong" selected>仿宋</option>
+        <option value="Microsoft YaHei">微软雅黑</option>
+        <option value="DengXian">等线</option>
+        <option value="YouYuan">幼圆</option>
+        <option value="STZhongsong">华文中宋</option>
+        <option value="STKaiti">华文楷体</option>
+        <option value="STFangsong">华文仿宋</option>
+        <option value="STXihei">华文细黑</option>
+        <option value="STSong">华文宋体</option>
+        <option value="STXingkai">华文行楷</option>
+        <option value="STLiti">华文隶书</option>
+        <option value="STXinwei">华文新魏</option>
+        <option value="STCaiyun">华文彩云</option>
+        <option value="STHupo">华文琥珀</option>
+        <option value="LiSu">隶书</option>
+        <option value="FZShuTi">方正舒体</option>
+        <option value="FZYaoTi">方正姚体</option>
+        <option value="PingFang SC">苹方</option>
+        <option value="Hiragino Sans GB">冬青黑体</option>
+        <option value="Source Han Serif CN">思源宋体</option>
+        <option value="Source Han Sans SC">思源黑体</option>
+        <option value="Noto Serif SC">思源宋体 Noto</option>
+        <option value="Noto Sans SC">思源黑体 Noto</option>
+        <option value="LXGW WenKai">霞鹜文楷</option>
+        <option value="LXGW 975 Yuan SC">975圆体</option>
+        <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
+        <option value="HelloFont GuoGuoTi">字由果果体</option>
+        <option value="xiaowei">站酷小薇体</option>
+        <option value="zcoolqingkehuangyouti">站酷庆科黄油体</option>
+        <option value="HappyZcool-2016">站酷快乐体</option>
+        <option value="JasonHandwriting9">清松手写体</option>
+        <option value="Muyao-Softbrush">木瑶软笔</option>
+        <option value="三极行楷简体-粗">三极行楷简体-粗</option>
+      </select>
+</div>
+<div class="field">
+<label for="titleSizePt">字号 / pt</label>
+<input type="number" id="titleSizePt" value="48.5" min="8" max="300" step="0.5">
+</div>
+</div>
+<div class="check">
+<input type="checkbox" id="titleBold" checked>
+<label for="titleBold">书名加粗</label>
+</div>
+<details class="adjustments">
+<summary>位置与样式微调</summary>
+<div>
+<div class="field">
+<label for="titlePos">书名位置</label>
+<select id="titlePos">
       <option value="top">页面上方</option>
       <option value="waist" selected>腰部</option>
     </select>
-    <div id="titleTopWrap" style="display:none">
-      <label>书名上方留白（毫米）</label>
-      <input type="number" id="titleTopMargin" value="36" min="0" max="200" step="1">
-    </div>
-    <label>书名对齐</label>
-    <select id="titleAlign">
+</div>
+<div id="titleTopWrap" style="display:none">
+<div class="field">
+<label for="titleTopMargin">距顶部 / mm</label>
+<input type="number" id="titleTopMargin" value="36" min="0" max="200" step="1">
+</div>
+</div>
+<div class="row">
+<div class="field">
+<label for="titleAlign">对齐方式</label>
+<select id="titleAlign">
       <option value="center" selected>居中</option>
       <option value="left">左对齐</option>
       <option value="right">右对齐</option>
     </select>
-    <div class="check"><input type="checkbox" id="titleBold" checked><label for="titleBold">书名加粗</label></div>
-    <label>书名左右偏移（毫米，负值向左）</label>
-    <input type="number" id="titleOffsetX" value="0" min="-200" max="200" step="1">
-    <label>书名（可换行）</label>
-    <textarea id="title" style="min-height:40px">落在我身上的雨</textarea>
-    <label>副标题 / 题记</label>
-    <input type="text" id="subtitle" value="">
-    <label>副标题对齐</label>
-    <select id="subtitleAlign">
+</div>
+<div class="field">
+<label for="titleOffsetX">水平偏移 / mm</label>
+<input type="number" id="titleOffsetX" value="0" min="-200" max="200" step="1">
+</div>
+</div>
+<div class="field">
+<label for="titleColor">书名颜色</label>
+<input type="color" id="titleColor" value="#000000">
+</div>
+</div>
+</details>
+</section>
+<section class="card">
+<h3>副标题 / 题记</h3>
+<div class="field">
+<label for="subtitle">副标题内容（可选）</label>
+<input type="text" id="subtitle" value="">
+</div>
+<div class="row">
+<div class="field">
+<label for="subtitleFont">字体</label>
+<select id="subtitleFont">
+        <option value="SimSun">宋体</option>
+        <option value="NSimSun">新宋体</option>
+        <option value="SimHei">黑体</option>
+        <option value="KaiTi">楷体</option>
+        <option value="FangSong" selected>仿宋</option>
+        <option value="Microsoft YaHei">微软雅黑</option>
+        <option value="DengXian">等线</option>
+        <option value="YouYuan">幼圆</option>
+        <option value="STZhongsong">华文中宋</option>
+        <option value="STKaiti">华文楷体</option>
+        <option value="STFangsong">华文仿宋</option>
+        <option value="STXihei">华文细黑</option>
+        <option value="STSong">华文宋体</option>
+        <option value="STXingkai">华文行楷</option>
+        <option value="STLiti">华文隶书</option>
+        <option value="STXinwei">华文新魏</option>
+        <option value="STCaiyun">华文彩云</option>
+        <option value="STHupo">华文琥珀</option>
+        <option value="LiSu">隶书</option>
+        <option value="FZShuTi">方正舒体</option>
+        <option value="FZYaoTi">方正姚体</option>
+        <option value="PingFang SC">苹方</option>
+        <option value="Hiragino Sans GB">冬青黑体</option>
+        <option value="Source Han Serif CN">思源宋体</option>
+        <option value="Source Han Sans SC">思源黑体</option>
+        <option value="Noto Serif SC">思源宋体 Noto</option>
+        <option value="Noto Sans SC">思源黑体 Noto</option>
+        <option value="LXGW WenKai">霞鹜文楷</option>
+        <option value="LXGW 975 Yuan SC">975圆体</option>
+        <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
+        <option value="HelloFont GuoGuoTi">字由果果体</option>
+        <option value="xiaowei">站酷小薇体</option>
+        <option value="zcoolqingkehuangyouti">站酷庆科黄油体</option>
+        <option value="HappyZcool-2016">站酷快乐体</option>
+        <option value="JasonHandwriting9">清松手写体</option>
+        <option value="Muyao-Softbrush">木瑶软笔</option>
+        <option value="三极行楷简体-粗">三极行楷简体-粗</option>
+      </select>
+</div>
+<div class="field">
+<label for="subtitleSizePt">字号 / pt</label>
+<input type="number" id="subtitleSizePt" value="24" min="6" max="120" step="0.5">
+</div>
+</div>
+<details class="adjustments">
+<summary>位置与样式微调</summary>
+<div>
+<div class="row">
+<div class="field">
+<label for="subtitleAlign">对齐方式</label>
+<select id="subtitleAlign">
       <option value="center" selected>居中</option>
       <option value="left">左对齐</option>
       <option value="right">右对齐</option>
     </select>
-    <label>副标题顶部位置（毫米）</label>
-    <input type="number" id="subtitleTop" value="145" min="0" max="300" step="1">
-    <label>作者</label>
-    <input type="text" id="author" value="陆庆屹/著">
-    <label>作者对齐</label>
-    <select id="authorAlign">
-      <option value="center" selected>居中</option>
-      <option value="left">左对齐</option>
-      <option value="right">右对齐</option>
-    </select>
-    <label>作者排列</label>
-    <select id="authorLayout">
+</div>
+<div class="field">
+<label for="subtitleTop">距顶部 / mm</label>
+<input type="number" id="subtitleTop" value="145" min="0" max="300" step="1">
+</div>
+</div>
+<div class="field">
+<label for="subtitleColor">副标题颜色</label>
+<input type="color" id="subtitleColor" value="#000000">
+</div>
+</div>
+</details>
+</section>
+<section class="card">
+<h3>作者与广告语</h3>
+<div class="field">
+<label for="author">作者</label>
+<input type="text" id="author" value="陆庆屹/著">
+</div>
+<details class="adjustments">
+<summary>作者位置与样式</summary>
+<div>
+<div class="row">
+<div class="field">
+<label for="authorLayout">排列方式</label>
+<select id="authorLayout">
       <option value="horizontal" selected>横排</option>
       <option value="vertical">竖排</option>
     </select>
-    <div id="authorHTopWrap">
-      <label>作者横排顶部位置（毫米）</label>
-      <input type="number" id="authorHTop" value="181" min="0" max="300" step="1">
-    </div>
-    <div id="authorVTopWrap" style="display:none">
-      <label>作者竖排顶部位置（毫米）</label>
-      <input type="number" id="authorVTop" value="160" min="0" max="300" step="1">
-    </div>
-    <label>广告语（可选）</label>
-    <input type="text" id="slogan" value="">
-    <label>广告语顶部位置（毫米）</label>
-    <input type="number" id="sloganTop" value="194" min="0" max="300" step="1">
-    <label>广告语对齐</label>
-    <select id="sloganAlign">
+</div>
+<div class="field">
+<label for="authorAlign">对齐方式</label>
+<select id="authorAlign">
       <option value="center" selected>居中</option>
       <option value="left">左对齐</option>
       <option value="right">右对齐</option>
     </select>
-    <div class="checks">
-      <div class="check"><input type="checkbox" id="coverShowTitle" checked><label for="coverShowTitle">封面显示书名</label></div>
-      <div class="check"><input type="checkbox" id="coverShowSubtitle" checked><label for="coverShowSubtitle">封面显示副标题</label></div>
-      <div class="check"><input type="checkbox" id="coverShowAuthor" checked><label for="coverShowAuthor">封面显示作者</label></div>
-      <div class="check"><input type="checkbox" id="coverShowSlogan" checked><label for="coverShowSlogan">封面显示广告语</label></div>
-    </div>
-    <label>封面图片方式</label>
-    <select id="coverImageMode">
+</div>
+</div>
+<div class="row">
+<div class="field">
+<label for="authorSizePt">字号 / pt</label>
+<input type="number" id="authorSizePt" value="20" min="6" max="120" step="0.5">
+</div>
+<div class="field">
+<label for="authorColor">作者颜色</label>
+<input type="color" id="authorColor" value="#000000">
+</div>
+</div>
+<div id="authorHTopWrap">
+<div class="field">
+<label for="authorHTop">横排距顶部 / mm</label>
+<input type="number" id="authorHTop" value="181" min="0" max="300" step="1">
+</div>
+</div>
+<div id="authorVTopWrap" style="display:none">
+<div class="field">
+<label for="authorVTop">竖排距顶部 / mm</label>
+<input type="number" id="authorVTop" value="160" min="0" max="300" step="1">
+</div>
+</div>
+</div>
+</details>
+<div class="field">
+<label for="slogan">广告语（可选）</label>
+<input type="text" id="slogan" value="">
+</div>
+<details class="adjustments">
+<summary>广告语位置与样式</summary>
+<div>
+<div class="row">
+<div class="field">
+<label for="sloganSizePt">字号 / pt</label>
+<input type="number" id="sloganSizePt" value="18" min="6" max="120" step="0.5">
+</div>
+<div class="field">
+<label for="sloganAlign">对齐方式</label>
+<select id="sloganAlign">
+      <option value="center" selected>居中</option>
+      <option value="left">左对齐</option>
+      <option value="right">右对齐</option>
+    </select>
+</div>
+</div>
+<div class="field">
+<label for="sloganTop">距顶部 / mm</label>
+<input type="number" id="sloganTop" value="194" min="0" max="300" step="1">
+</div>
+</div>
+</details>
+</section>
+<section class="card">
+<h3>封面图片</h3>
+<div class="field">
+<label for="coverImageMode">图片布局</label>
+<select id="coverImageMode">
       <option value="half" selected>上半部分图片区</option>
       <option value="bottom">下半部分图片区</option>
       <option value="full">整张铺满封面</option>
       <option value="none">不使用图片</option>
     </select>
-    <div id="halfImageWrap">
-      <label>封面图片（可替换，用于上/下半部分）</label>
-      <input type="file" id="coverImage" accept="image/*">
-      <label for="coverImageW">图片宽度（毫米）</label>
-      <input type="number" id="coverImageW" min="1" step="0.5" placeholder="自动（保持默认宽度）">
-      <div class="hint">上、下半部分图片共用，水平居中；留空使用默认宽度，最大为封面宽度。高度保持原设置。</div>
-    </div>
-    <div id="fullImageWrap" style="display:none">
-      <label>整张封面图（铺满整个封面区域）</label>
-      <input type="file" id="coverFullImage" accept="image/*">
-    </div>
-    <div id="bottomImageWrap" style="display:none">
-      <div class="row">
-        <div><label>下半图顶部位置（毫米）</label><input type="number" id="bottomImgTop" value="136" min="0" max="300" step="1"></div>
-        <div><label>下半图高度（毫米）</label><input type="number" id="bottomImgH" value="81" min="10" max="300" step="1"></div>
-      </div>
-    </div>
-    <label>铺满方式（图片比例与区域不一致时）</label>
-    <select id="imageMode">
+</div>
+<div id="halfImageWrap">
+<div class="field">
+<label for="coverImage">上传封面图片</label>
+<input type="file" id="coverImage" accept="image/*">
+</div>
+<div class="field">
+<label for="coverImageW">图片宽度 / mm · 留空自动</label>
+<input type="number" id="coverImageW" min="1" step="0.5" placeholder="自动（保持默认宽度）">
+</div>
+<p class="hint">图片水平居中，最大为封面宽度。</p>
+</div>
+<div id="fullImageWrap" style="display:none">
+<div class="field">
+<label for="coverFullImage">上传整张封面图</label>
+<input type="file" id="coverFullImage" accept="image/*">
+</div>
+</div>
+<div id="bottomImageWrap" style="display:none">
+<div class="row">
+<div class="field">
+<label for="bottomImgTop">距顶部 / mm</label>
+<input type="number" id="bottomImgTop" value="136" min="0" max="300" step="1">
+</div>
+<div class="field">
+<label for="bottomImgH">图片高度 / mm</label>
+<input type="number" id="bottomImgH" value="81" min="10" max="300" step="1">
+</div>
+</div>
+</div>
+<div class="field">
+<label for="imageMode">图片适配方式</label>
+<select id="imageMode">
       <option value="cover" selected>铺满裁剪（cover）</option>
       <option value="contain">完整显示（contain）</option>
     </select>
-    <div class="colorline"><span>封面底色</span><input type="color" id="coverBg" value="#ffffff"></div>
-    <div class="colorline"><span>书名颜色</span><input type="color" id="titleColor" value="#000000"></div>
-    <div class="colorline"><span>作者颜色</span><input type="color" id="authorColor" value="#000000"></div>
-    <div class="colorline"><span>副标题颜色</span><input type="color" id="subtitleColor" value="#000000"></div>
-
-    <h2>封面短横线</h2>
-    <div class="check"><input type="checkbox" id="coverShowLine"><label for="coverShowLine">显示封面短横线</label></div>
-    <div class="row">
-      <div><label for="coverLineOffsetX">水平偏移（毫米）</label><input type="number" id="coverLineOffsetX" value="0" step="0.5"></div>
-      <div><label for="coverLineTop">距封面顶部（毫米）</label><input type="number" id="coverLineTop" value="130" min="0" step="0.5"></div>
-    </div>
-    <div class="row">
-      <div><label for="coverLineLength">横线长度（毫米）</label><input type="number" id="coverLineLength" value="20" min="0.5" step="0.5"></div>
-      <div><label for="coverLineThickness">横线粗细（毫米）</label><input type="number" id="coverLineThickness" value="0.4" min="0.1" step="0.1"></div>
-    </div>
-    <div class="colorline"><label for="coverLineColor" style="margin:0">横线颜色</label><input type="color" id="coverLineColor" value="#000000"></div>
-    <div class="hint">水平偏移为 0 时居中，负值向左、正值向右；顶部距离按横线中心计算。超出封面的部分不显示。</div>
-
-    <h2>书脊</h2>
-    <div class="check"><input type="checkbox" id="spineSameTitle" checked><label for="spineSameTitle" style="margin:0">书脊书名与封面一致</label></div>
-    <div id="spineTitleWrap" style="display:none"><label>书脊书名</label><input type="text" id="spineTitle" value="落在我身上的雨"></div>
-    <div class="check"><input type="checkbox" id="spineShowAuthor" checked><label for="spineShowAuthor" style="margin:0">书脊显示作者</label></div>
-    <div class="check" id="spineSameAuthorWrap"><input type="checkbox" id="spineSameAuthor" checked><label for="spineSameAuthor" style="margin:0">书脊作者与封面一致</label></div>
-    <div id="spineAuthorWrap" style="display:none"><label>书脊作者</label><input type="text" id="spineAuthor" value="陆庆屹/著"></div>
-    <div class="row">
-      <div><label for="spineTitleOffsetY">书名垂直偏移（毫米）</label><input type="number" id="spineTitleOffsetY" value="0" step="0.5"></div>
-      <div><label for="spineAuthorOffsetY">作者垂直偏移（毫米）</label><input type="number" id="spineAuthorOffsetY" value="0" step="0.5"></div>
-    </div>
-    <div class="hint">相对默认位置调节高度：负值向上，正值向下，0 恢复默认位置。</div>
-    <label>出版社（可选，书脊底部）</label>
-    <input type="text" id="publisher" value="">
-    <label for="spinePublisherOffsetY">出版社垂直偏移（毫米）</label>
-    <input type="number" id="spinePublisherOffsetY" value="0" step="0.5">
-    <div class="colorline"><span>书脊底色</span><input type="color" id="spineBg" value="#ffffff"></div>
-    <div class="colorline"><span>书脊文字</span><input type="color" id="spineColor" value="#000000"></div>
-
-    <h2>前勒口（作者介绍）</h2>
-    <textarea id="frontFlapText">作者介绍
-
-刘娟，本书作者，秀茹的女儿。她用七年时间采访、整理，写下了母亲平凡而伟大的一生。
-
-此区域可替换为你自己的作者介绍文字。</textarea>
-    <div class="check"><input type="checkbox" id="frontFlapShowImage"><label for="frontFlapShowImage" style="margin:0">显示作者图片</label></div>
-    <div id="frontFlapImageWrap" style="display:none">
-      <label>作者图片（可上传）</label>
-      <input type="file" id="frontFlapImage" accept="image/*">
-      <label>图片宽度（毫米）</label>
-      <input type="number" id="frontFlapImageW" value="60" min="20" max="200" step="1">
-    </div>
-    <div class="colorline"><span>前勒口底色</span><input type="color" id="frontFlapBg" value="#ffffff"></div>
-
-    <h2>封底（文字框）</h2>
-    <textarea id="backCoverText">秀茹是一个非常普通的农村妇女。她的故事对于更多陌生读者和时代研究也许没有半点意义，但对我和我的家人，以及我的后代来说，却是非常宝贵的家庭历史。
+</div>
+<div class="field">
+<label for="coverBg">封面底色</label>
+<input type="color" id="coverBg" value="#ffffff">
+</div>
+</section>
+<section class="card">
+<h3>装饰短横线</h3>
+<div class="check">
+<input type="checkbox" id="coverShowLine">
+<label for="coverShowLine">显示短横线</label>
+</div>
+<details class="adjustments">
+<summary>位置与样式微调</summary>
+<div>
+<div class="row">
+<div class="field">
+<label for="coverLineOffsetX">水平偏移 / mm</label>
+<input type="number" id="coverLineOffsetX" value="0" step="0.5">
+</div>
+<div class="field">
+<label for="coverLineTop">距顶部 / mm</label>
+<input type="number" id="coverLineTop" value="130" min="0" step="0.5">
+</div>
+</div>
+<div class="row">
+<div class="field">
+<label for="coverLineLength">长度 / mm</label>
+<input type="number" id="coverLineLength" value="20" min="0.5" step="0.5">
+</div>
+<div class="field">
+<label for="coverLineThickness">粗细 / mm</label>
+<input type="number" id="coverLineThickness" value="0.4" min="0.1" step="0.1">
+</div>
+</div>
+<div class="field">
+<label for="coverLineColor">横线颜色</label>
+<input type="color" id="coverLineColor" value="#000000">
+</div>
+<p class="hint">水平偏移 0 为居中；负值向左，正值向右。</p>
+</div>
+</details>
+</section>
+</section>
+<section class="editor-panel" id="panel-spine" role="tabpanel" aria-labelledby="tab-spine">
+<div class="panel-heading">
+<span class="eyebrow">BOOK COVER STUDIO</span>
+<h2>书脊</h2>
+<p>沿用封面内容，或为书脊独立设置书名和作者。</p>
+</div>
+<section class="card">
+<h3>书名</h3>
+<div class="check">
+<input type="checkbox" id="spineSameTitle" checked>
+<label for="spineSameTitle">与封面书名一致</label>
+</div>
+<div id="spineTitleWrap" style="display:none">
+<div class="field">
+<label for="spineTitle">书脊书名</label>
+<input type="text" id="spineTitle" value="落在我身上的雨">
+</div>
+</div>
+<div class="row">
+<div class="field">
+<label for="spineSizePt">字号 / pt</label>
+<input type="number" id="spineSizePt" value="22" min="6" max="120" step="0.5">
+</div>
+<div class="field">
+<label for="spineTitleOffsetY">垂直偏移 / mm</label>
+<input type="number" id="spineTitleOffsetY" value="0" step="0.5">
+</div>
+</div>
+</section>
+<section class="card">
+<h3>作者</h3>
+<div class="check">
+<input type="checkbox" id="spineShowAuthor" checked>
+<label for="spineShowAuthor">显示作者</label>
+</div>
+<div id="spineSameAuthorWrap">
+<div class="check">
+<input type="checkbox" id="spineSameAuthor" checked>
+<label for="spineSameAuthor">与封面作者一致</label>
+</div>
+</div>
+<div id="spineAuthorWrap" style="display:none">
+<div class="field">
+<label for="spineAuthor">书脊作者</label>
+<input type="text" id="spineAuthor" value="陆庆屹/著">
+</div>
+</div>
+<div class="field">
+<label for="spineAuthorOffsetY">垂直偏移 / mm</label>
+<input type="number" id="spineAuthorOffsetY" value="0" step="0.5">
+</div>
+</section>
+<section class="card">
+<h3>出版社与颜色</h3>
+<div class="field">
+<label for="publisher">出版社（可选）</label>
+<input type="text" id="publisher" value="">
+</div>
+<div class="field">
+<label for="spinePublisherOffsetY">出版社垂直偏移 / mm</label>
+<input type="number" id="spinePublisherOffsetY" value="0" step="0.5">
+</div>
+<div class="row">
+<div class="field">
+<label for="spineBg">书脊底色</label>
+<input type="color" id="spineBg" value="#ffffff">
+</div>
+<div class="field">
+<label for="spineColor">文字颜色</label>
+<input type="color" id="spineColor" value="#000000">
+</div>
+</div>
+<p class="hint">负值上移、正值下移。书名字体沿用封面，过大字号会自动缩小以适应书脊宽度。</p>
+</section>
+</section>
+<section class="editor-panel" id="panel-back" role="tabpanel" aria-labelledby="tab-back">
+<div class="panel-heading">
+<span class="eyebrow">BOOK COVER STUDIO</span>
+<h2>封底</h2>
+<p>安排内容简介、封底图片和正文位置。</p>
+</div>
+<section class="card">
+<h3>封底文字</h3>
+<div class="field">
+<label for="backCoverText">正文内容</label>
+<textarea id="backCoverText">秀茹是一个非常普通的农村妇女。她的故事对于更多陌生读者和时代研究也许没有半点意义，但对我和我的家人，以及我的后代来说，却是非常宝贵的家庭历史。
 
 我用 7 万字记录下了她从 1958 年到 2018 年整整 60 年的人生故事。我确信，只要她的故事还在，她就永远不会被遗忘。
 
 当女儿再问我：“妈妈，姥姥是谁呀？我想见见她。”我就跟她一起，翻开这本书，了解一下秀茹的一生。</textarea>
-    <div class="check"><input type="checkbox" id="backCoverShowImage"><label for="backCoverShowImage" style="margin:0">显示封底整张图片</label></div>
-    <div id="backCoverImageWrap" style="display:none">
-      <label>封底图片（可上传，铺满整个封底）</label>
-      <input type="file" id="backCoverImage" accept="image/*">
-      <div class="row">
-        <div><label>填充方式</label>
-          <select id="backCoverImageMode">
+</div>
+<div class="row">
+<div class="field">
+<label for="bodySizePt">字号 / pt</label>
+<input type="number" id="bodySizePt" value="14" min="6" max="80" step="0.5">
+</div>
+<div class="field">
+<label for="backCoverBg">封底底色</label>
+<input type="color" id="backCoverBg" value="#ffffff">
+</div>
+</div>
+<details class="adjustments">
+<summary>位置与样式微调</summary>
+<div>
+<div class="row">
+<div class="field">
+<label for="backCoverTextTop">距顶部 / mm</label>
+<input type="number" id="backCoverTextTop" value="20" min="0" max="250" step="1">
+</div>
+<div class="field">
+<label for="backCoverTextH">文字区域高度 / mm</label>
+<input type="number" id="backCoverTextH" value="186" min="20" max="250" step="1">
+</div>
+</div>
+</div>
+</details>
+<p class="hint">自动换行处理中文标点避头。字体与左右留白在「尺寸与样式」中设置。</p>
+</section>
+<section class="card">
+<h3>封底图片</h3>
+<div class="check">
+<input type="checkbox" id="backCoverShowImage">
+<label for="backCoverShowImage">显示整张封底图片</label>
+</div>
+<div id="backCoverImageWrap" style="display:none">
+<div class="field">
+<label for="backCoverImage">上传封底图片</label>
+<input type="file" id="backCoverImage" accept="image/*">
+</div>
+<div class="field">
+<label for="backCoverImageMode">图片适配方式</label>
+<select id="backCoverImageMode">
             <option value="cover">铺满裁切（cover）</option>
             <option value="contain">完整显示（contain）</option>
           </select>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div><label>文字顶部位置（毫米）</label><input type="number" id="backCoverTextTop" value="20" min="0" max="250" step="1"></div>
-      <div><label>文字区域高度（毫米）</label><input type="number" id="backCoverTextH" value="186" min="20" max="250" step="1"></div>
-    </div>
-    <div class="colorline"><span>封底底色</span><input type="color" id="backCoverBg" value="#ffffff"></div>
+</div>
+</div>
+</section>
+</section>
+<section class="editor-panel" id="panel-flaps" role="tabpanel" aria-labelledby="tab-flaps">
+<div class="panel-heading">
+<span class="eyebrow">BOOK COVER STUDIO</span>
+<h2>前后勒口</h2>
+<p>介绍作者，或补充内容简介与出版信息。</p>
+</div>
+<section class="card">
+<h3>前勒口 · 作者介绍</h3>
+<div class="field">
+<label for="frontFlapText">介绍文字</label>
+<textarea id="frontFlapText">作者介绍
 
-    <h2>后勒口（文字区）</h2>
-    <textarea id="backFlapText">后勒口文字区域
+刘娟，本书作者，秀茹的女儿。她用七年时间采访、整理，写下了母亲平凡而伟大的一生。
+
+此区域可替换为你自己的作者介绍文字。</textarea>
+</div>
+<div class="check">
+<input type="checkbox" id="frontFlapShowImage">
+<label for="frontFlapShowImage">显示作者图片</label>
+</div>
+<div id="frontFlapImageWrap" style="display:none">
+<div class="field">
+<label for="frontFlapImage">上传作者图片</label>
+<input type="file" id="frontFlapImage" accept="image/*">
+</div>
+<div class="field">
+<label for="frontFlapImageW">图片宽度 / mm</label>
+<input type="number" id="frontFlapImageW" value="60" min="20" max="200" step="1">
+</div>
+</div>
+<div class="field">
+<label for="frontFlapBg">前勒口底色</label>
+<input type="color" id="frontFlapBg" value="#ffffff">
+</div>
+</section>
+<section class="card">
+<h3>后勒口 · 补充信息</h3>
+<div class="field">
+<label for="backFlapText">文字内容</label>
+<textarea id="backFlapText">后勒口文字区域
 
 可在此填写内容简介、出版信息、定价等。</textarea>
-    <div class="colorline"><span>后勒口底色</span><input type="color" id="backFlapBg" value="#ffffff"></div>
-
-    <h2>文字样式</h2>
-    <div class="row">
-      <div><label>正文字体</label><select id="bodyFont">
-        <option value="SimSun">宋体</option>
-        <option value="NSimSun">新宋体</option>
-        <option value="SimHei">黑体</option>
-        <option value="KaiTi">楷体</option>
-        <option value="FangSong" selected>仿宋</option>
-        <option value="Microsoft YaHei">微软雅黑</option>
-        <option value="DengXian">等线</option>
-        <option value="YouYuan">幼圆</option>
-        <option value="STZhongsong">华文中宋</option>
-        <option value="STKaiti">华文楷体</option>
-        <option value="STFangsong">华文仿宋</option>
-        <option value="STXihei">华文细黑</option>
-        <option value="STSong">华文宋体</option>
-        <option value="STXingkai">华文行楷</option>
-        <option value="STLiti">华文隶书</option>
-        <option value="STXinwei">华文新魏</option>
-        <option value="STCaiyun">华文彩云</option>
-        <option value="STHupo">华文琥珀</option>
-        <option value="LiSu">隶书</option>
-        <option value="FZShuTi">方正舒体</option>
-        <option value="FZYaoTi">方正姚体</option>
-        <option value="PingFang SC">苹方</option>
-        <option value="Hiragino Sans GB">冬青黑体</option>
-        <option value="Source Han Serif CN">思源宋体</option>
-        <option value="Source Han Sans SC">思源黑体</option>
-        <option value="Noto Serif SC">思源宋体 Noto</option>
-        <option value="Noto Sans SC">思源黑体 Noto</option>
-        <option value="LXGW WenKai">霞鹜文楷</option>
-        <option value="LXGW 975 Yuan SC">975圆体</option>
-        <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
-        <option value="HelloFont GuoGuoTi">字由果果体</option>
-        <option value="xiaowei">站酷小薇体</option>
-        <option value="zcoolqingkehuangyouti">站酷庆科黄油体</option>
-        <option value="HappyZcool-2016">站酷快乐体</option>
-        <option value="JasonHandwriting9">清松手写体</option>
-        <option value="Muyao-Softbrush">木瑶软笔</option>
-        <option value="三极行楷简体-粗">三极行楷简体-粗</option>
-      </select></div>
-      <div><label>书名字体</label><select id="titleFont">
-        <option value="SimSun">宋体</option>
-        <option value="NSimSun">新宋体</option>
-        <option value="SimHei">黑体</option>
-        <option value="KaiTi">楷体</option>
-        <option value="FangSong" selected>仿宋</option>
-        <option value="Microsoft YaHei">微软雅黑</option>
-        <option value="DengXian">等线</option>
-        <option value="YouYuan">幼圆</option>
-        <option value="STZhongsong">华文中宋</option>
-        <option value="STKaiti">华文楷体</option>
-        <option value="STFangsong">华文仿宋</option>
-        <option value="STXihei">华文细黑</option>
-        <option value="STSong">华文宋体</option>
-        <option value="STXingkai">华文行楷</option>
-        <option value="STLiti">华文隶书</option>
-        <option value="STXinwei">华文新魏</option>
-        <option value="STCaiyun">华文彩云</option>
-        <option value="STHupo">华文琥珀</option>
-        <option value="LiSu">隶书</option>
-        <option value="FZShuTi">方正舒体</option>
-        <option value="FZYaoTi">方正姚体</option>
-        <option value="PingFang SC">苹方</option>
-        <option value="Hiragino Sans GB">冬青黑体</option>
-        <option value="Source Han Serif CN">思源宋体</option>
-        <option value="Source Han Sans SC">思源黑体</option>
-        <option value="Noto Serif SC">思源宋体 Noto</option>
-        <option value="Noto Sans SC">思源黑体 Noto</option>
-        <option value="LXGW WenKai">霞鹜文楷</option>
-        <option value="LXGW 975 Yuan SC">975圆体</option>
-        <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
-        <option value="HelloFont GuoGuoTi">字由果果体</option>
-        <option value="xiaowei">站酷小薇体</option>
-        <option value="zcoolqingkehuangyouti">站酷庆科黄油体</option>
-        <option value="HappyZcool-2016">站酷快乐体</option>
-        <option value="JasonHandwriting9">清松手写体</option>
-        <option value="Muyao-Softbrush">木瑶软笔</option>
-        <option value="三极行楷简体-粗">三极行楷简体-粗</option>
-      </select></div>
-    </div>
-    <div class="hint" id="fontFilterHint"></div>
-    <div class="row">
-      <div><label>副标题字体</label><select id="subtitleFont">
-        <option value="SimSun">宋体</option>
-        <option value="NSimSun">新宋体</option>
-        <option value="SimHei">黑体</option>
-        <option value="KaiTi">楷体</option>
-        <option value="FangSong" selected>仿宋</option>
-        <option value="Microsoft YaHei">微软雅黑</option>
-        <option value="DengXian">等线</option>
-        <option value="YouYuan">幼圆</option>
-        <option value="STZhongsong">华文中宋</option>
-        <option value="STKaiti">华文楷体</option>
-        <option value="STFangsong">华文仿宋</option>
-        <option value="STXihei">华文细黑</option>
-        <option value="STSong">华文宋体</option>
-        <option value="STXingkai">华文行楷</option>
-        <option value="STLiti">华文隶书</option>
-        <option value="STXinwei">华文新魏</option>
-        <option value="STCaiyun">华文彩云</option>
-        <option value="STHupo">华文琥珀</option>
-        <option value="LiSu">隶书</option>
-        <option value="FZShuTi">方正舒体</option>
-        <option value="FZYaoTi">方正姚体</option>
-        <option value="PingFang SC">苹方</option>
-        <option value="Hiragino Sans GB">冬青黑体</option>
-        <option value="Source Han Serif CN">思源宋体</option>
-        <option value="Source Han Sans SC">思源黑体</option>
-        <option value="Noto Serif SC">思源宋体 Noto</option>
-        <option value="Noto Sans SC">思源黑体 Noto</option>
-        <option value="LXGW WenKai">霞鹜文楷</option>
-        <option value="LXGW 975 Yuan SC">975圆体</option>
-        <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
-        <option value="HelloFont GuoGuoTi">字由果果体</option>
-        <option value="xiaowei">站酷小薇体</option>
-        <option value="zcoolqingkehuangyouti">站酷庆科黄油体</option>
-        <option value="HappyZcool-2016">站酷快乐体</option>
-        <option value="JasonHandwriting9">清松手写体</option>
-        <option value="Muyao-Softbrush">木瑶软笔</option>
-        <option value="三极行楷简体-粗">三极行楷简体-粗</option>
-      </select></div>
-      <div></div>
-    </div>
-    <div class="row">
-      <div><label>书名大小（磅）</label><input type="number" id="titleSizePt" value="48.5" min="8" max="300" step="0.5"></div>
-      <div><label>副标题大小（磅）</label><input type="number" id="subtitleSizePt" value="24" min="6" max="120" step="0.5"></div>
-    </div>
-    <div class="row">
-      <div><label>作者大小（磅）</label><input type="number" id="authorSizePt" value="20" min="6" max="120" step="0.5"></div>
-      <div><label>广告语大小（磅）</label><input type="number" id="sloganSizePt" value="18" min="6" max="120" step="0.5"></div>
-    </div>
-    <div class="row">
-      <div><label>正文大小（磅）</label><input type="number" id="bodySizePt" value="14" min="6" max="80" step="0.5"></div>
-      <div><label>勒口文字大小（磅）</label><input type="number" id="flapSizePt" value="13" min="6" max="80" step="0.5"></div>
-    </div>
-    <div class="row">
-      <div><label>书脊书名大小（磅）</label><input type="number" id="spineSizePt" value="22" min="6" max="120" step="0.5"></div>
-      <div></div>
-    </div>
-    <div class="row">
-      <div><label>封底/勒口文字顶部留白（毫米）</label><input type="number" id="textTopMargin" value="20" min="0" max="100" step="1"></div>
-      <div><label>左右留白（毫米）</label><input type="number" id="textSideMargin" value="16" min="0" max="80" step="1"></div>
-    </div>
-    <div class="colorline"><span>正文颜色</span><input type="color" id="bodyColor" value="#000000"></div>
-    <div class="hint">磅（pt）为印刷常用字号单位，1 磅 ≈ 0.353 毫米。书脊字号超过书脊宽度时会自动缩小。常规参考：初号 42、一号 26、三号 16、四号 14、小四 12、五号 10.5。</div>
-    <div class="hint">字体提示：苹方、思源宋体/黑体、霞鹜文楷、阿里巴巴普惠体、站酷等热门字体需本机已安装才能生效；未安装会自动回退到默认字体。</div>
-
-    <h2>辅助线</h2>
-    <div class="check"><input type="checkbox" id="showGuides" checked><label for="showGuides" style="margin:0">预览显示折线 / 出血线 / 文字框</label></div>
-    <div class="check"><input type="checkbox" id="exportBleed" checked><label for="exportBleed" style="margin:0">导出包含出血</label></div>
-    <div class="check"><input type="checkbox" id="exportGuides"><label for="exportGuides" style="margin:0">导出包含辅助线（一般不需要）</label></div>
-
-    <div class="sep"></div>
-    <button id="saveProject">保存工程（导出 .json）</button>
-    <button id="openProjectBtn" class="secondary">打开工程（导入 .json）</button>
-    <input type="file" id="openProject" accept=".json,application/json" style="display:none">
-    <div class="hint">保存工程会把当前所有设置和已上传图片打包成 .json 文件下载；下次用「打开工程」载入即可继续修改，也可把 .json 拷到别的设备继续编辑。</div>
-    <div class="sep"></div>
-    <button id="download">下载高清 PNG</button>
-    <button id="downloadPdf" class="secondary">导出高清 PDF</button>
-    <div class="hint">提示：双击本文件即可在浏览器中使用，无需联网。PDF 为单页、页面尺寸与图片一致（按 DPI 换算），适合直接送印厂；也可用同目录的 img2pdf.py 把多张图批量转 PDF。</div>
-  </div>
-  <div class="preview" id="preview"><canvas id="cv"></canvas></div>
 </div>
-
+<div class="field">
+<label for="backFlapBg">后勒口底色</label>
+<input type="color" id="backFlapBg" value="#ffffff">
+</div>
+</section>
+<section class="card">
+<h3>勒口文字样式</h3>
+<div class="field">
+<label for="flapSizePt">前后勒口字号 / pt</label>
+<input type="number" id="flapSizePt" value="13" min="6" max="80" step="0.5">
+</div>
+<p class="hint">字体、颜色与留白在「尺寸与样式」中统一设置。正文自动处理中文标点避头。</p>
+</section>
+</section>
+<section class="editor-panel" id="panel-export" role="tabpanel" aria-labelledby="tab-export">
+<div class="panel-heading">
+<span class="eyebrow">BOOK COVER STUDIO</span>
+<h2>导出成品</h2>
+<p>保存工程便于继续编辑，导出图片或 PDF 用于交付。</p>
+</div>
+<section class="card">
+<h3>导出设置</h3>
+<div class="field">
+<label for="dpi">输出分辨率 / DPI</label>
+<select id="dpi">
+<option value="150">150</option>
+<option value="300" selected>300</option>
+<option value="600">600</option>
+</select>
+</div>
+<div class="check">
+<input type="checkbox" id="exportBleed" checked>
+<label for="exportBleed">包含出血区域</label>
+</div>
+<div class="check">
+<input type="checkbox" id="exportGuides">
+<label for="exportGuides">包含辅助线</label>
+</div>
+<p class="hint">通常选择 300 DPI。正式印刷文件一般不包含辅助线，请按印厂要求核对尺寸和出血。</p>
+</section>
+<section class="card">
+<h3>下载文件</h3>
+<button id="download">下载高清 PNG</button>
+<button id="downloadPdf" class="secondary">导出高清 PDF</button>
+<p class="hint">PNG 适合查看和传递；PDF 为与实际尺寸对应的单页文件。</p>
+</section>
+<section class="card">
+<h3>继续编辑与分享</h3>
+<p class="hint">顶部「保存工程」将设置与图片打包为 JSON。「打开工程」可载入继续编辑。分享时发送本 HTML 文件与工程 JSON，字体需在对方设备上安装。</p>
+</section>
+</section>
+</div>
+<div class="editor-foot">修改即时预览 · 记得保存工程</div>
+</aside>
+<main class="preview-pane">
+<div class="preview-toolbar">
+<div>
+<span class="eyebrow">LIVE PREVIEW</span>
+<h2>封面展开预览</h2>
+</div>
+<div class="check">
+<input type="checkbox" id="showGuides" checked>
+<label for="showGuides">显示辅助线</label>
+</div>
+</div>
+<div class="preview-stage" id="preview">
+<div class="artboard">
+<div class="panel-map" id="panelMap">
+<span>后勒口</span>
+<span>封底</span>
+<span>书脊</span>
+<span>封面</span>
+<span>前勒口</span>
+</div>
+<canvas id="cv" aria-label="图书外封展开预览">
+</canvas>
+</div>
+</div>
+<div class="preview-footer">
+<span id="liveDims">
+</span>
+<span>尺寸 mm · 字号 pt</span>
+</div>
+<div class="workflow-note">
+<span>01 设置尺寸</span>
+<b>→</b>
+<span>02 编辑各区域</span>
+<b>→</b>
+<span>03 保存工程 / 导出</span>
+</div>
+</main>
+</div>
 <script>
 (function(){
   "use strict";
@@ -971,11 +1346,15 @@
     var c = cfg();
     var L = layout(c);
     var container = $("preview");
-    var availW = container.clientWidth - 40;
-    var ppm = Math.min(availW / L.totalW, 2.2);
-    ppm = Math.max(ppm, 0.4);
+    // 随预览区域宽度放大，不再限制大屏幕上的预览比例。
+    var availW = Math.max(1, container.clientWidth - 24);
+    var ppm = availW / L.totalW;
     var W = Math.round(L.totalW*ppm), H = Math.round(L.totalH*ppm);
     cv.width = W; cv.height = H;
+    $("panelMap").style.width = W + "px";
+    $("panelMap").style.gridTemplateColumns = c.flapW + "fr " + c.coverW + "fr " + c.spineW + "fr " + c.coverW + "fr " + c.flapW + "fr";
+    $("panelMap").children[0].style.visibility = c.flapW ? "visible" : "hidden";
+    $("panelMap").children[4].style.visibility = c.flapW ? "visible" : "hidden";
     draw(ctx, ppm, c, $("showGuides").checked, L);
     $("liveDims").textContent = "总版 " + L.totalW.toFixed(1) + " × " + L.totalH.toFixed(1) + " mm｜成品 " + c.coverW + "×" + c.coverH + " mm｜书脊 " + c.spineW + " mm";
   }
@@ -1090,6 +1469,31 @@
     var r = renderExportCanvas();
     downloadBlob(makePdfBlob(r.canvas, r.dpi), r.name + ".pdf");
   }
+
+  // 分区导航：仅切换可见性，所有工程控件始终保留在页面中。
+  var tabs = Array.from(document.querySelectorAll('.section-tab'));
+  function selectPanel(tab, focus){
+    tabs.forEach(function(item){
+      var selected = item === tab;
+      item.setAttribute('aria-selected', String(selected));
+      item.tabIndex = selected ? 0 : -1;
+      $(item.getAttribute('aria-controls')).hidden = !selected;
+    });
+    document.querySelector('.controls').scrollTop = 0;
+    if(focus) tab.focus();
+  }
+  tabs.forEach(function(tab, index){
+    tab.addEventListener('click', function(){ selectPanel(tab, false); });
+    tab.addEventListener('keydown', function(event){
+      var next;
+      if(event.key === 'ArrowRight' || event.key === 'ArrowDown') next = (index + 1) % tabs.length;
+      if(event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = (index + tabs.length - 1) % tabs.length;
+      if(event.key === 'Home') next = 0;
+      if(event.key === 'End') next = tabs.length - 1;
+      if(next !== undefined){ event.preventDefault(); selectPanel(tabs[next], true); }
+    });
+  });
+  selectPanel($('tab-front'), false);
 
   // ---------- 事件绑定 ----------
   var ids = ["coverW","coverH","spineW","flapW","bleed","title","subtitle","author","slogan",
