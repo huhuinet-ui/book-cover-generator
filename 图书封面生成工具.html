@@ -234,16 +234,17 @@
 <input type="checkbox" id="titleBold" checked>
 <label for="titleBold">书名加粗</label>
 </div>
-<details class="adjustments">
+<div class="field"><label for="titleLayout">书名排列</label><select id="titleLayout"><option value="horizontal" selected>横排</option><option value="vertical">竖排（从右向左分列）</option></select></div><details class="adjustments">
 <summary>位置与样式微调</summary>
 <div>
 <div class="field">
-<label for="titlePos">书名位置</label>
+<label for="titlePos">书名起始位置</label>
 <select id="titlePos">
       <option value="top">页面上方</option>
       <option value="waist" selected>腰部</option>
     </select>
 </div>
+<div class="field"><label for="titleOffsetY">书名垂直偏移 / mm</label><input type="number" id="titleOffsetY" value="0" step="0.5"><p class="hint">相对起始位置调整高度：负值上移，正值下移。横排和竖排均有效。</p></div>
 <div id="titleTopWrap" style="display:none">
 <div class="field">
 <label for="titleTopMargin">距顶部 / mm</label>
@@ -274,8 +275,8 @@
 <section class="card">
 <h3>副标题 / 题记</h3>
 <div class="field">
-<label for="subtitle">副标题内容（可选）</label>
-<input type="text" id="subtitle" value="">
+<label for="subtitle">副标题内容（可选，支持换行）</label>
+<textarea id="subtitle" rows="3" placeholder="输入副标题，按 Enter 换行"></textarea>
 </div>
 <div class="row">
 <div class="field">
@@ -325,7 +326,7 @@
 <input type="number" id="subtitleSizePt" value="24" min="6" max="120" step="0.5">
 </div>
 </div>
-<details class="adjustments">
+<div class="field"><label for="subtitleLayout">副标题排列</label><select id="subtitleLayout"><option value="horizontal" selected>横排</option><option value="vertical">竖排（从右向左分列）</option></select></div><details class="adjustments">
 <summary>位置与样式微调</summary>
 <div>
 <div class="row">
@@ -341,6 +342,10 @@
 <label for="subtitleTop">距顶部 / mm</label>
 <input type="number" id="subtitleTop" value="145" min="0" max="300" step="1">
 </div>
+</div>
+<div class="field">
+<label for="subtitleOffsetX">水平偏移 / mm · 负值向左，正值向右</label>
+<input type="number" id="subtitleOffsetX" value="0" step="0.5">
 </div>
 <div class="field">
 <label for="subtitleColor">副标题颜色</label>
@@ -400,8 +405,8 @@
 </div>
 </details>
 <div class="field">
-<label for="slogan">广告语（可选）</label>
-<input type="text" id="slogan" value="">
+<label for="slogan">广告语（可选，支持换行）</label>
+<textarea id="slogan" rows="3" placeholder="输入广告语，按 Enter 换行"></textarea>
 </div>
 <details class="adjustments">
 <summary>广告语位置与样式</summary>
@@ -423,6 +428,10 @@
 <div class="field">
 <label for="sloganTop">距顶部 / mm</label>
 <input type="number" id="sloganTop" value="194" min="0" max="300" step="1">
+</div>
+<div class="field">
+<label for="sloganColor">广告语颜色</label>
+<input type="color" id="sloganColor" value="#000000">
 </div>
 </div>
 </details>
@@ -563,6 +572,11 @@
 <label for="spineAuthor">书脊作者</label>
 <input type="text" id="spineAuthor" value="陆庆屹/著">
 </div>
+</div>
+<div class="field">
+<label for="spineAuthorSizePt">作者字号 / pt</label>
+<input type="number" id="spineAuthorSizePt" min="1" max="120" step="0.5" placeholder="自动（书名字号的 60%）">
+<p class="hint">留空沿用原有比例；手动设置后独立调节，过大时自动缩小以适应书脊宽度。</p>
 </div>
 <div class="field">
 <label for="spineAuthorOffsetY">垂直偏移 / mm</label>
@@ -811,6 +825,9 @@
       bleed:  parseFloat($("bleed").value)||3,
       title:  $("title").value,
       titlePos: $("titlePos").value,
+      titleLayout: $("titleLayout").value,
+      titleOffsetY: parseFloat($("titleOffsetY").value) || 0,
+      subtitleLayout: $("subtitleLayout").value,
       titleAlign: $("titleAlign").value,
       titleBold: $("titleBold").checked,
       titleOffsetX: (function(v){ v = parseFloat($("titleOffsetX").value); return isNaN(v) ? 0 : v; })(),
@@ -820,7 +837,8 @@
       coverImageW: Math.max(0, parseFloat($("coverImageW").value) || 0),
       subtitle: $("subtitle").value,
       subtitleAlign: $("subtitleAlign").value,
-      subtitleTop: parseFloat($("subtitleTop").value)||145,
+      subtitleOffsetX: parseFloat($("subtitleOffsetX").value) || 0,
+      subtitleTop: (function(){ var v = parseFloat($("subtitleTop").value); return isNaN(v) ? 145 : v; })(),
       subtitleColor: $("subtitleColor").value,
       subtitleFont: $("subtitleFont").value,
       author: $("author").value,
@@ -830,6 +848,7 @@
       authorVTop: parseFloat($("authorVTop").value)||160,
       slogan:  $("slogan").value,
       sloganAlign: $("sloganAlign").value,
+      sloganColor: $("sloganColor").value,
       publisher: $("publisher").value,
       spineSameTitle: $("spineSameTitle").checked,
       spineTitle: $("spineTitle").value,
@@ -857,6 +876,7 @@
       bodySizePt: parseFloat($("bodySizePt").value)||14,
       flapSizePt: parseFloat($("flapSizePt").value)||13,
       spineSizePt: parseFloat($("spineSizePt").value)||22,
+      spineAuthorSizePt: Math.max(0, parseFloat($("spineAuthorSizePt").value) || 0),
       textTopMargin: parseFloat($("textTopMargin").value)||20,
       textSideMargin: parseFloat($("textSideMargin").value)||16,
       backCoverTextTop: parseFloat($("backCoverTextTop").value)||20,
@@ -1033,6 +1053,25 @@
     return lines.length * lineH;
   }
 
+  // 封面竖排：每个手动换行作为一列，列顺序从右向左，保留空列。
+  // 使用调用方已设置的字体、字号和颜色，对齐方式作用于整个列组。
+  function drawCoverVertical(g, text, anchorX, top, sizePx, align){
+    var columns = text.split(/\r\n|\r|\n/);
+    var step = sizePx*1.35;
+    var width = sizePx + (columns.length - 1)*step;
+    var left = align === "left" ? anchorX : (align === "right" ? anchorX - width : anchorX - width/2);
+    g.save();
+    g.textAlign = "center";
+    g.textBaseline = "top";
+    columns.forEach(function(column, index){
+      var x = left + width - sizePx/2 - index*step;
+      Array.from(column).forEach(function(character, row){
+        g.fillText(character, x, top + row*step);
+      });
+    });
+    g.restore();
+  }
+
   function drawVerticalText(g, text, cx, y0, maxH, font, sizePx, color, bold){
     g.font = fontStr(font, sizePx, bold);
     g.fillStyle = color;
@@ -1142,7 +1181,7 @@
     var authorHalo = null;
 
     // 书名（页面上方 / 腰部）
-    var titleY = fc.y + (c.titlePos === "top" ? c.titleTopMargin : h*0.52);
+    var titleY = fc.y + (c.titlePos === "top" ? c.titleTopMargin : h*0.52) + c.titleOffsetY;
     var titleSize = ptToMm(c.titleSizePt);
     var titleLineH = titleSize*1.25;
     var titleLines = [];
@@ -1159,8 +1198,12 @@
       titleLines = wrapText(g, c.title, titleMaxW*ppm);
       g.fillStyle = c.titleColor;
       g.textBaseline = "top";
-      for(var j=0;j<titleLines.length;j++){
-        fillTextHalo(g, titleLines[j], titleAX, (titleY + j*titleLineH)*ppm, halo, titleSize*ppm*0.1);
+      if(c.titleLayout === "vertical"){
+        drawCoverVertical(g, c.title, titleAX, titleY*ppm, titleSize*ppm, titleAlign);
+      } else {
+        for(var j=0;j<titleLines.length;j++){
+          fillTextHalo(g, titleLines[j], titleAX, (titleY + j*titleLineH)*ppm, halo, titleSize*ppm*0.1);
+        }
       }
     }
 
@@ -1175,7 +1218,16 @@
       if(c.subtitleAlign === "left"){ subAX = (fc.x + fc.w*0.07)*ppm; g.textAlign = "left"; }
       else if(c.subtitleAlign === "right"){ subAX = (fc.x + fc.w - fc.w*0.07)*ppm; g.textAlign = "right"; }
       else { subAX = (fc.x + fc.w/2)*ppm; g.textAlign = "center"; }
-      fillTextHalo(g, c.subtitle, subAX, subY*ppm, halo, subSize*ppm*0.1);
+      subAX += c.subtitleOffsetX*ppm;
+      var subLines = c.subtitle.split(/\r\n|\r|\n/);
+      var subLineH = subSize*1.35;
+      if(c.subtitleLayout === "vertical"){
+        drawCoverVertical(g, c.subtitle, subAX, subY*ppm, subSize*ppm, c.subtitleAlign);
+      } else {
+        for(var si=0;si<subLines.length;si++){
+          fillTextHalo(g, subLines[si], subAX, (subY + si*subLineH)*ppm, halo, subSize*ppm*0.1);
+        }
+      }
     }
 
     // 作者
@@ -1205,13 +1257,17 @@
       var yrY = fc.y + c.sloganTop;
       var yrSize = ptToMm(c.sloganSizePt);
       g.font = fontStr(c.bodyFont, yrSize*ppm, false);
-      g.fillStyle = c.bodyColor;
+      g.fillStyle = c.sloganColor;
       g.textBaseline = "top";
       var yrAX;
       if(c.sloganAlign === "left"){ yrAX = (fc.x + fc.w*0.07)*ppm; g.textAlign = "left"; }
       else if(c.sloganAlign === "right"){ yrAX = (fc.x + fc.w - fc.w*0.07)*ppm; g.textAlign = "right"; }
       else { yrAX = (fc.x + fc.w/2)*ppm; g.textAlign = "center"; }
-      fillTextHalo(g, c.slogan, yrAX, yrY*ppm, authorHalo, yrSize*ppm*0.12);
+      var sloganLines = c.slogan.split(/\r\n|\r|\n/);
+      var sloganLineH = yrSize*1.35;
+      for(var sl=0;sl<sloganLines.length;sl++){
+        fillTextHalo(g, sloganLines[sl], yrAX, (yrY + sl*sloganLineH)*ppm, authorHalo, yrSize*ppm*0.12);
+      }
     }
 
     // 封面短横线（叠加在封面内容上，裁切到封面范围内）
@@ -1239,7 +1295,7 @@
       // 书名占上部 70%，作者占下部
       var titleH = spineMaxH*0.66;
       drawVerticalText(g, spineTitle, spineCX, spineTop + c.spineTitleOffsetY*ppm, titleH, c.titleFont, spineSize*ppm, c.spineColor, true);
-      var auSize = spineSize*0.6;
+      var auSize = c.spineAuthorSizePt > 0 ? Math.min(sp.w*0.9, ptToMm(c.spineAuthorSizePt)) : spineSize*0.6;
       drawVerticalText(g, spineAuthor, spineCX, spineTop + titleH + c.spineAuthorOffsetY*ppm, spineMaxH*0.24, c.bodyFont, auSize*ppm, c.spineColor, false);
     } else {
       drawVerticalText(g, spineTitle, spineCX, spineTop + c.spineTitleOffsetY*ppm, spineMaxH, c.titleFont, spineSize*ppm, c.spineColor, true);
@@ -1499,9 +1555,9 @@
   var ids = ["coverW","coverH","spineW","flapW","bleed","title","subtitle","author","slogan",
     "coverLineOffsetX","coverLineTop","coverLineLength","coverLineThickness","coverLineColor",
     "publisher","spineTitle","spineAuthor","spineTitleOffsetY","spineAuthorOffsetY","spinePublisherOffsetY","frontFlapText","backCoverText","backFlapText",
-    "bodyFont","titleFont","subtitleFont","bodyColor","titleColor","authorColor","subtitleColor","coverBg","spineBg","spineColor",
+    "bodyFont","titleFont","subtitleFont","bodyColor","titleColor","authorColor","subtitleColor","sloganColor","coverBg","spineBg","spineColor",
     "frontFlapBg","backCoverBg","backFlapBg","imageMode","titleAlign","titleOffsetX","subtitleAlign","authorAlign","sloganAlign",
-    "titleSizePt","subtitleSizePt","authorSizePt","sloganSizePt","bodySizePt","flapSizePt","spineSizePt","textTopMargin","textSideMargin","frontFlapImageW","titleTopMargin","bottomImgTop","bottomImgH","coverImageW","sloganTop","authorHTop","authorVTop","backCoverTextTop","backCoverTextH","subtitleTop"];
+    "titleLayout","subtitleLayout","titleOffsetY","subtitleOffsetX","titleSizePt","subtitleSizePt","authorSizePt","sloganSizePt","bodySizePt","flapSizePt","spineSizePt","spineAuthorSizePt","textTopMargin","textSideMargin","frontFlapImageW","titleTopMargin","bottomImgTop","bottomImgH","coverImageW","sloganTop","authorHTop","authorVTop","backCoverTextTop","backCoverTextH","subtitleTop"];
   ids.forEach(function(id){
     var el = $(id);
     el.addEventListener("input", redraw);
@@ -1610,6 +1666,13 @@
   }
 
   function applyConfig(obj){
+    $("spineAuthorSizePt").value = "";
+    $("subtitleOffsetX").value = 0;
+    $("titleLayout").value = "horizontal";
+    $("subtitleLayout").value = "horizontal";
+    $("titleOffsetY").value = 0;
+    // 旧工程的广告语原来使用正文颜色，载入时保留其外观。
+    $("sloganColor").value = obj.sloganColor || obj.bodyColor || "#000000";
     // 旧工程默认不显示横线，避免沿用上一个工程的设置。
     $("coverShowLine").checked = false;
     var lineDefaults = {coverLineOffsetX:0, coverLineTop:130, coverLineLength:20, coverLineThickness:0.4, coverLineColor:"#000000"};
@@ -1623,7 +1686,7 @@
       var el = $(k);
       if(!el) continue;
       if(el.type === "checkbox"){ el.checked = !!obj[k]; }
-      else { el.value = (k === "coverImageW" && !(obj[k] > 0)) ? "" : obj[k]; }
+      else { el.value = ((k === "coverImageW" || k === "spineAuthorSizePt") && !(obj[k] > 0)) ? "" : obj[k]; }
     }
     updateImageWrapVisibility();
     updateSpineAuthorVisibility();
