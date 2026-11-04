@@ -132,6 +132,11 @@
 </div>
 <p class="hint" id="fontFilterHint">
 </p>
+    <button type="button" id="scanLocalFonts">读取本机全部字体</button>
+    <label>或导入字体文件（可多选，当前页面有效）</label>
+    <input type="file" id="importFonts" accept=".ttf,.otf,.woff,.woff2" multiple>
+    <div class="hint" id="localFontStatus" role="status">在新设备上点击读取并允许字体访问。若浏览器不支持，可直接导入字体文件。字体仅在本机使用，不会上传；重新打开页面后请再次读取或导入。</div>
+
 <p class="hint">字体需在本机安装或激活。分享工程时，请同时告知所用字体。</p>
 </section>
 <section class="card">
@@ -381,6 +386,7 @@
 </div>
 </div>
 <div class="row">
+<div class="field"><label for="authorOffsetX">作者水平偏移 / mm（正值向右）</label><input type="number" id="authorOffsetX" value="0" step="0.5"></div>
 <div class="field">
 <label for="authorSizePt">字号 / pt</label>
 <input type="number" id="authorSizePt" value="20" min="6" max="120" step="0.5">
@@ -564,7 +570,7 @@
 <div id="spineSameAuthorWrap">
 <div class="check">
 <input type="checkbox" id="spineSameAuthor" checked>
-<label for="spineSameAuthor">与封面作者一致</label>
+<label for="spineSameAuthor">与封面作者文字一致</label>
 </div>
 </div>
 <div id="spineAuthorWrap" style="display:none">
@@ -573,11 +579,13 @@
 <input type="text" id="spineAuthor" value="陆庆屹/著">
 </div>
 </div>
+<div class="field"><label for="spineAuthorColor">书脊作者颜色</label><input type="color" id="spineAuthorColor" value="#000000"></div>
 <div class="field">
 <label for="spineAuthorSizePt">作者字号 / pt</label>
 <input type="number" id="spineAuthorSizePt" min="1" max="120" step="0.5" placeholder="自动（书名字号的 60%）">
 <p class="hint">留空沿用原有比例；手动设置后独立调节，过大时自动缩小以适应书脊宽度。</p>
 </div>
+<div class="field"><label for="spineAuthorOffsetX">作者水平偏移 / mm（正值向右）</label><input type="number" id="spineAuthorOffsetX" value="0" step="0.5"></div>
 <div class="field">
 <label for="spineAuthorOffsetY">垂直偏移 / mm</label>
 <input type="number" id="spineAuthorOffsetY" value="0" step="0.5">
@@ -627,6 +635,7 @@
 <label for="bodySizePt">字号 / pt</label>
 <input type="number" id="bodySizePt" value="14" min="6" max="80" step="0.5">
 </div>
+<div class="field"><label for="backCoverTextColor">封底文字颜色</label><input type="color" id="backCoverTextColor" value="#000000"></div>
 <div class="field">
 <label for="backCoverBg">封底底色</label>
 <input type="color" id="backCoverBg" value="#ffffff">
@@ -700,6 +709,7 @@
 <input type="number" id="frontFlapImageW" value="60" min="20" max="200" step="1">
 </div>
 </div>
+<div class="field"><label for="frontFlapTextColor">前勒口文字颜色</label><input type="color" id="frontFlapTextColor" value="#000000"></div>
 <div class="field">
 <label for="frontFlapBg">前勒口底色</label>
 <input type="color" id="frontFlapBg" value="#ffffff">
@@ -713,6 +723,7 @@
 
 可在此填写内容简介、出版信息、定价等。</textarea>
 </div>
+<div class="field"><label for="backFlapTextColor">后勒口文字颜色</label><input type="color" id="backFlapTextColor" value="#000000"></div>
 <div class="field">
 <label for="backFlapBg">后勒口底色</label>
 <input type="color" id="backFlapBg" value="#ffffff">
@@ -888,6 +899,12 @@
       backFlapText: $("backFlapText").value,
       bodyFont: $("bodyFont").value,
       titleFont: $("titleFont").value,
+      backCoverTextColor: $("backCoverTextColor").value,
+      frontFlapTextColor: $("frontFlapTextColor").value,
+      backFlapTextColor: $("backFlapTextColor").value,
+      spineAuthorColor: $("spineAuthorColor").value,
+      spineAuthorOffsetX: parseFloat($("spineAuthorOffsetX").value) || 0,
+      authorOffsetX: parseFloat($("authorOffsetX").value) || 0,
       bodyColor: $("bodyColor").value,
       titleColor: $("titleColor").value,
       authorColor: $("authorColor").value,
@@ -1003,6 +1020,7 @@
   var _probeCtx = null;
   var _availCache = {};
   function fontAvailable(name){
+    if(discoveredFonts && discoveredFonts.has(name)) return true;
     if(Object.prototype.hasOwnProperty.call(_availCache, name)) return _availCache[name];
     if(!_probeCtx) _probeCtx = document.createElement("canvas").getContext("2d");
     var SAMPLE = "\u96e8\u843d\u5728\u6211\u8eab\u4e0a\u7684ABCabc123\u6c38\u5b57";
@@ -1238,7 +1256,7 @@
         if(c.authorAlign === "left"){ vAX = (fc.x + fc.w*0.07)*ppm; vAlign = "left"; }
         else if(c.authorAlign === "right"){ vAX = (fc.x + fc.w - fc.w*0.07)*ppm; vAlign = "right"; }
         else { vAX = (fc.x + fc.w/2)*ppm; vAlign = "center"; }
-        drawAuthorVertical(g, c.author, vAX, (fc.y + c.authorVTop)*ppm, auSize*ppm, c.bodyFont, c.authorColor, vAlign, authorHalo, auSize*ppm*0.12);
+        drawAuthorVertical(g, c.author, vAX + c.authorOffsetX*ppm, (fc.y + c.authorVTop)*ppm, auSize*ppm, c.bodyFont, c.authorColor, vAlign, authorHalo, auSize*ppm*0.12);
       } else {
         var auY = fc.y + c.authorHTop;
         g.font = fontStr(c.bodyFont, auSize*ppm, false);
@@ -1248,7 +1266,7 @@
         if(c.authorAlign === "left"){ auAX = (fc.x + fc.w*0.07)*ppm; g.textAlign = "left"; }
         else if(c.authorAlign === "right"){ auAX = (fc.x + fc.w - fc.w*0.07)*ppm; g.textAlign = "right"; }
         else { auAX = (fc.x + fc.w/2)*ppm; g.textAlign = "center"; }
-        fillTextHalo(g, c.author, auAX, auY*ppm, authorHalo, auSize*ppm*0.12);
+        fillTextHalo(g, c.author, auAX + c.authorOffsetX*ppm, auY*ppm, authorHalo, auSize*ppm*0.12);
       }
     }
 
@@ -1296,7 +1314,7 @@
       var titleH = spineMaxH*0.66;
       drawVerticalText(g, spineTitle, spineCX, spineTop + c.spineTitleOffsetY*ppm, titleH, c.titleFont, spineSize*ppm, c.spineColor, true);
       var auSize = c.spineAuthorSizePt > 0 ? Math.min(sp.w*0.9, ptToMm(c.spineAuthorSizePt)) : spineSize*0.6;
-      drawVerticalText(g, spineAuthor, spineCX, spineTop + titleH + c.spineAuthorOffsetY*ppm, spineMaxH*0.24, c.bodyFont, auSize*ppm, c.spineColor, false);
+      drawVerticalText(g, spineAuthor, spineCX + c.spineAuthorOffsetX*ppm, spineTop + titleH + c.spineAuthorOffsetY*ppm, spineMaxH*0.24, c.bodyFont, auSize*ppm, c.spineAuthorColor, false);
     } else {
       drawVerticalText(g, spineTitle, spineCX, spineTop + c.spineTitleOffsetY*ppm, spineMaxH, c.titleFont, spineSize*ppm, c.spineColor, true);
     }
@@ -1324,7 +1342,7 @@
     g.beginPath();
     g.rect((bc.x+bm)*ppm, bcTextTop*ppm, (bc.w-2*bm)*ppm, bcTextH*ppm);
     g.clip();
-    drawTextBlock(g, c.backCoverText, (bc.x+bm)*ppm, bcTextTop*ppm, (bc.w-2*bm)*ppm, lineH*ppm, c.bodyFont, bodySize*ppm, c.bodyColor, "left", false);
+    drawTextBlock(g, c.backCoverText, (bc.x+bm)*ppm, bcTextTop*ppm, (bc.w-2*bm)*ppm, lineH*ppm, c.bodyFont, bodySize*ppm, c.backCoverTextColor, "left", false);
     g.restore();
 
     // ===== 前勒口（作者介绍）=====
@@ -1342,11 +1360,11 @@
       drawImageFit(g, frontFlapImageEl, flapImgRect, "contain", ppm);
       flapTextY = flapImgRect.y + flapImgRect.h + fSize*1.2;
     }
-    drawTextBlock(g, c.frontFlapText, (ff.x+fm)*ppm, flapTextY*ppm, (ff.w-2*fm)*ppm, fLineH*ppm, c.bodyFont, fSize*ppm, c.bodyColor, "left", false);
+    drawTextBlock(g, c.frontFlapText, (ff.x+fm)*ppm, flapTextY*ppm, (ff.w-2*fm)*ppm, fLineH*ppm, c.bodyFont, fSize*ppm, c.frontFlapTextColor, "left", false);
 
     // ===== 后勒口（文字区）=====
     var bf = R.backFlap;
-    drawTextBlock(g, c.backFlapText, (bf.x+fm)*ppm, (bf.y+topM)*ppm, (bf.w-2*fm)*ppm, fLineH*ppm, c.bodyFont, fSize*ppm, c.bodyColor, "left", false);
+    drawTextBlock(g, c.backFlapText, (bf.x+fm)*ppm, (bf.y+topM)*ppm, (bf.w-2*fm)*ppm, fLineH*ppm, c.bodyFont, fSize*ppm, c.backFlapTextColor, "left", false);
 
     // ===== 辅助线 =====
     if(guides){
@@ -1555,7 +1573,7 @@
   var ids = ["coverW","coverH","spineW","flapW","bleed","title","subtitle","author","slogan",
     "coverLineOffsetX","coverLineTop","coverLineLength","coverLineThickness","coverLineColor",
     "publisher","spineTitle","spineAuthor","spineTitleOffsetY","spineAuthorOffsetY","spinePublisherOffsetY","frontFlapText","backCoverText","backFlapText",
-    "bodyFont","titleFont","subtitleFont","bodyColor","titleColor","authorColor","subtitleColor","sloganColor","coverBg","spineBg","spineColor",
+    "backCoverTextColor","frontFlapTextColor","backFlapTextColor","spineAuthorColor","spineAuthorOffsetX","authorOffsetX","bodyFont","titleFont","subtitleFont","bodyColor","titleColor","authorColor","subtitleColor","sloganColor","coverBg","spineBg","spineColor",
     "frontFlapBg","backCoverBg","backFlapBg","imageMode","titleAlign","titleOffsetX","subtitleAlign","authorAlign","sloganAlign",
     "titleLayout","subtitleLayout","titleOffsetY","subtitleOffsetX","titleSizePt","subtitleSizePt","authorSizePt","sloganSizePt","bodySizePt","flapSizePt","spineSizePt","spineAuthorSizePt","textTopMargin","textSideMargin","frontFlapImageW","titleTopMargin","bottomImgTop","bottomImgH","coverImageW","sloganTop","authorHTop","authorVTop","backCoverTextTop","backCoverTextH","subtitleTop"];
   ids.forEach(function(id){
@@ -1620,6 +1638,60 @@
   }
   $("coverImageMode").addEventListener("change", function(){ updateImageWrapVisibility(); redraw(); });
 
+  // 枚举得到的真实字体与成功加载的文件无需再通过宽度猜测。
+  var discoveredFonts = new Set();
+  function addFontFamilies(names){
+    names = [...new Set(names)].sort(function(a,b){ return a.localeCompare(b, "zh-CN"); });
+    names.forEach(function(name){
+      discoveredFonts.add(name);
+      ["bodyFont", "titleFont", "subtitleFont"].forEach(function(id){
+        var sel = $(id);
+        if(!Array.from(sel.options).some(function(op){ return op.value === name; })){
+          sel.add(new Option(name, name));
+        }
+      });
+    });
+    _availCache = {};
+    filterFontOptions();
+    redraw();
+  }
+  $("scanLocalFonts").addEventListener("click", async function(){
+    var status = $("localFontStatus");
+    if(!window.isSecureContext || typeof window.queryLocalFonts !== "function"){
+      status.textContent = "当前环境无法读取系统字体。请用桌面版 Chrome 或 Edge，在 HTTPS 或 localhost 页面打开；也可使用下方字体文件导入。";
+      return;
+    }
+    this.disabled = true;
+    status.textContent = "正在读取，请在浏览器提示中允许访问字体……";
+    try {
+      var fonts = await window.queryLocalFonts();
+      var names = fonts.map(function(f){ return f.family; }).filter(Boolean);
+      addFontFamilies(names);
+      status.textContent = "已读取 " + new Set(names).size + " 个字体家族，已加入正文、书名和副标题字体选项。部分字体可能不含中文字形。";
+    } catch(err){
+      status.textContent = "读取未完成（" + err.name + "）。请检查浏览器的本地字体权限后重试，或导入字体文件。";
+    } finally { this.disabled = false; }
+  });
+  var importedFontSerial = 0;
+  $("importFonts").addEventListener("change", async function(){
+    var files = Array.from(this.files);
+    var loaded = [], failed = [];
+    this.disabled = true;
+    for(var file of files){
+      try {
+        var family = file.name.replace(/\.[^.]+$/, "") + "（导入" + (++importedFontSerial) + "）";
+        var face = new FontFace(family, await file.arrayBuffer());
+        await face.load();
+        document.fonts.add(face);
+        loaded.push(family);
+      } catch(err){ failed.push(file.name); }
+    }
+    addFontFamilies(loaded);
+    $("localFontStatus").textContent = "已导入 " + loaded.length + " 款字体；重新打开页面后需再次导入。" + (failed.length ? " 无法加载：" + failed.join("、") : "");
+    this.value = "";
+    this.disabled = false;
+  });
+
   function filterFontOptions(){
     var hiddenList = [];
     ["bodyFont","titleFont","subtitleFont"].forEach(function(id){
@@ -1666,6 +1738,11 @@
   }
 
   function applyConfig(obj){
+    ["backCoverTextColor","frontFlapTextColor","backFlapTextColor"].forEach(function(id){
+      $(id).value = obj[id] || obj.bodyColor || "#000000";
+    });
+    $("spineAuthorColor").value = obj.spineAuthorColor || obj.spineColor || "#000000";
+    ["authorOffsetX","spineAuthorOffsetX"].forEach(function(id){ $(id).value = parseFloat(obj[id]) || 0; });
     $("spineAuthorSizePt").value = "";
     $("subtitleOffsetX").value = 0;
     $("titleLayout").value = "horizontal";
