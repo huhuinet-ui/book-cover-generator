@@ -1641,6 +1641,16 @@
   // 枚举得到的真实字体与成功加载的文件无需再通过宽度猜测。
   var discoveredFonts = new Set();
   function addFontFamilies(names){
+    // 读取是增量合并：保留读取前可用的选项及选择，避免权限变化后的
+    // Canvas 再检测误判让原有字体消失。
+    var selections = {};
+    ["bodyFont", "titleFont", "subtitleFont"].forEach(function(id){
+      var sel = $(id);
+      selections[id] = sel.value;
+      Array.from(sel.options).forEach(function(op){
+        if(!op.hidden && !op.disabled) discoveredFonts.add(op.value);
+      });
+    });
     names = [...new Set(names)].sort(function(a,b){ return a.localeCompare(b, "zh-CN"); });
     names.forEach(function(name){
       discoveredFonts.add(name);
@@ -1651,8 +1661,14 @@
         }
       });
     });
-    _availCache = {};
+    // 仅清除失败缓存，让新安装字体可重新检测；保留已成功的检测。
+    Object.keys(_availCache).forEach(function(name){
+      if(!_availCache[name]) delete _availCache[name];
+    });
     filterFontOptions();
+    Object.keys(selections).forEach(function(id){
+      if(discoveredFonts.has(selections[id])) $(id).value = selections[id];
+    });
     redraw();
   }
   $("scanLocalFonts").addEventListener("click", async function(){
