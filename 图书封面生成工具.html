@@ -85,7 +85,7 @@
 <section class="card">
 <h3>共用文字样式</h3>
 <div class="field">
-<label for="bodyFont">正文字体 · 封底、勒口、作者与广告语</label>
+<label for="bodyFont">正文字体 · 勒口、作者与广告语</label>
 <select id="bodyFont">
         <option value="SimSun">宋体</option>
         <option value="NSimSun">新宋体</option>
@@ -539,6 +539,14 @@
 <p>沿用封面内容，或为书脊独立设置书名和作者。</p>
 </div>
 <section class="card">
+<h3>书脊图片</h3>
+<div class="check"><input type="checkbox" id="spineShowImage"><label for="spineShowImage">显示书脊图片</label></div>
+<div class="field"><label for="spineImage">上传书脊图片</label><input type="file" id="spineImage" accept="image/*"></div>
+<div class="field"><label for="spineImageMode">图片适配方式</label><select id="spineImageMode"><option value="cover">铺满裁切</option><option value="contain">完整显示</option></select></div>
+<button type="button" id="removeSpineImage" class="secondary">移除书脊图片</button>
+<p class="hint">图片显示在书脊底色上方、文字下方，并随工程保存。</p>
+</section>
+<section class="card">
 <h3>书名</h3>
 <div class="check">
 <input type="checkbox" id="spineSameTitle" checked>
@@ -630,9 +638,48 @@
 
 当女儿再问我：“妈妈，姥姥是谁呀？我想见见她。”我就跟她一起，翻开这本书，了解一下秀茹的一生。</textarea>
 </div>
+<div class="field"><label for="backCoverFont">封底字体</label><select id="backCoverFont">
+        <option value="SimSun">宋体</option>
+        <option value="NSimSun">新宋体</option>
+        <option value="SimHei">黑体</option>
+        <option value="KaiTi">楷体</option>
+        <option value="FangSong" selected>仿宋</option>
+        <option value="Microsoft YaHei">微软雅黑</option>
+        <option value="DengXian">等线</option>
+        <option value="YouYuan">幼圆</option>
+        <option value="STZhongsong">华文中宋</option>
+        <option value="STKaiti">华文楷体</option>
+        <option value="STFangsong">华文仿宋</option>
+        <option value="STXihei">华文细黑</option>
+        <option value="STSong">华文宋体</option>
+        <option value="STXingkai">华文行楷</option>
+        <option value="STLiti">华文隶书</option>
+        <option value="STXinwei">华文新魏</option>
+        <option value="STCaiyun">华文彩云</option>
+        <option value="STHupo">华文琥珀</option>
+        <option value="LiSu">隶书</option>
+        <option value="FZShuTi">方正舒体</option>
+        <option value="FZYaoTi">方正姚体</option>
+        <option value="PingFang SC">苹方</option>
+        <option value="Hiragino Sans GB">冬青黑体</option>
+        <option value="Source Han Serif CN">思源宋体</option>
+        <option value="Source Han Sans SC">思源黑体</option>
+        <option value="Noto Serif SC">思源宋体 Noto</option>
+        <option value="Noto Sans SC">思源黑体 Noto</option>
+        <option value="LXGW WenKai">霞鹜文楷</option>
+        <option value="LXGW 975 Yuan SC">975圆体</option>
+        <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
+        <option value="HelloFont GuoGuoTi">字由果果体</option>
+        <option value="xiaowei">站酷小薇体</option>
+        <option value="zcoolqingkehuangyouti">站酷庆科黄油体</option>
+        <option value="HappyZcool-2016">站酷快乐体</option>
+        <option value="JasonHandwriting9">清松手写体</option>
+        <option value="Muyao-Softbrush">木瑶软笔</option>
+        <option value="三极行楷简体-粗">三极行楷简体-粗</option>
+      </select></div>
 <div class="row">
 <div class="field">
-<label for="bodySizePt">字号 / pt</label>
+<label for="bodySizePt">封底字号 / pt</label>
 <input type="number" id="bodySizePt" value="14" min="6" max="80" step="0.5">
 </div>
 <div class="field"><label for="backCoverTextColor">封底文字颜色</label><input type="color" id="backCoverTextColor" value="#000000"></div>
@@ -659,7 +706,58 @@
 <p class="hint">自动换行处理中文标点避头。字体与左右留白在「尺寸与样式」中设置。</p>
 </section>
 <section class="card">
+<h3>封底广告语</h3>
+<div class="field"><label for="backSlogan">广告语内容（可选，支持换行）</label><textarea id="backSlogan" rows="3" placeholder="输入封底广告语，按 Enter 换行"></textarea></div>
+<div class="field"><label for="backSloganFont">广告语字体</label><select id="backSloganFont">
+        <option value="SimSun">宋体</option>
+        <option value="NSimSun">新宋体</option>
+        <option value="SimHei">黑体</option>
+        <option value="KaiTi">楷体</option>
+        <option value="FangSong" selected>仿宋</option>
+        <option value="Microsoft YaHei">微软雅黑</option>
+        <option value="DengXian">等线</option>
+        <option value="YouYuan">幼圆</option>
+        <option value="STZhongsong">华文中宋</option>
+        <option value="STKaiti">华文楷体</option>
+        <option value="STFangsong">华文仿宋</option>
+        <option value="STXihei">华文细黑</option>
+        <option value="STSong">华文宋体</option>
+        <option value="STXingkai">华文行楷</option>
+        <option value="STLiti">华文隶书</option>
+        <option value="STXinwei">华文新魏</option>
+        <option value="STCaiyun">华文彩云</option>
+        <option value="STHupo">华文琥珀</option>
+        <option value="LiSu">隶书</option>
+        <option value="FZShuTi">方正舒体</option>
+        <option value="FZYaoTi">方正姚体</option>
+        <option value="PingFang SC">苹方</option>
+        <option value="Hiragino Sans GB">冬青黑体</option>
+        <option value="Source Han Serif CN">思源宋体</option>
+        <option value="Source Han Sans SC">思源黑体</option>
+        <option value="Noto Serif SC">思源宋体 Noto</option>
+        <option value="Noto Sans SC">思源黑体 Noto</option>
+        <option value="LXGW WenKai">霞鹜文楷</option>
+        <option value="LXGW 975 Yuan SC">975圆体</option>
+        <option value="Alibaba PuHuiTi">阿里巴巴普惠体</option>
+        <option value="HelloFont GuoGuoTi">字由果果体</option>
+        <option value="xiaowei">站酷小薇体</option>
+        <option value="zcoolqingkehuangyouti">站酷庆科黄油体</option>
+        <option value="HappyZcool-2016">站酷快乐体</option>
+        <option value="JasonHandwriting9">清松手写体</option>
+        <option value="Muyao-Softbrush">木瑶软笔</option>
+        <option value="三极行楷简体-粗">三极行楷简体-粗</option>
+      </select></div>
+<div class="row"><div class="field"><label for="backSloganSizePt">字号 / pt</label><input type="number" id="backSloganSizePt" value="18" min="1" max="120" step="0.5"></div>
+<div class="field"><label for="backSloganColor">广告语颜色</label><input type="color" id="backSloganColor" value="#000000"></div></div>
+<div class="field"><label for="backSloganAlign">对齐方式</label><select id="backSloganAlign"><option value="center">居中</option><option value="left">左对齐</option><option value="right">右对齐</option></select></div>
+<div class="row"><div class="field"><label for="backSloganX">水平偏移 / mm</label><input type="number" id="backSloganX" value="0" step="0.5"></div>
+<div class="field"><label for="backSloganY">距封底顶部 / mm</label><input type="number" id="backSloganY" value="180" step="0.5"></div></div>
+<p class="hint">水平偏移以所选对齐位置为基准，正值向右、负值向左；广告语显示在图片上方，超出封底部分裁切。留空不显示。</p>
+</section>
+<section class="card">
 <h3>封底图片</h3>
+<div class="field"><label for="backImageMenu">图片设置</label><select id="backImageMenu"><option value="full">整张封底图片</option><option value="bottom">下半部分图片</option></select></div>
+<div id="backFullSettings">
 <div class="check">
 <input type="checkbox" id="backCoverShowImage">
 <label for="backCoverShowImage">显示整张封底图片</label>
@@ -669,6 +767,11 @@
 <label for="backCoverImage">上传封底图片</label>
 <input type="file" id="backCoverImage" accept="image/*">
 </div>
+<div class="field"><label for="backCoverImageX">距封底左侧 / mm</label><input type="number" id="backCoverImageX" value="0" step="0.5"></div>
+<div class="field"><label for="backCoverImageY">距封底顶部 / mm</label><input type="number" id="backCoverImageY" value="0" step="0.5"></div>
+<div class="field"><label for="backCoverImageW">图片区域宽度 / mm</label><input type="number" id="backCoverImageW" value="" step="0.5" min="0.5" placeholder="留空铺满封底"></div>
+<div class="field"><label for="backCoverImageH">图片区域高度 / mm</label><input type="number" id="backCoverImageH" value="" step="0.5" min="0.5" placeholder="留空铺满封底"></div>
+<p class="hint">位置以封底左上角为原点，正值向右、向下。宽高留空使用封底尺寸；超出封底的部分会裁切。</p>
 <div class="field">
 <label for="backCoverImageMode">图片适配方式</label>
 <select id="backCoverImageMode">
@@ -676,6 +779,18 @@
             <option value="contain">完整显示（contain）</option>
           </select>
 </div>
+</div>
+</div>
+<div id="backBottomSettings" style="display:none">
+<div class="check"><input type="checkbox" id="backBottomShowImage"><label for="backBottomShowImage">显示下半部分图片</label></div>
+<div class="field"><label for="backBottomImage">上传下半部分图片</label><input type="file" id="backBottomImage" accept="image/*"></div>
+<div class="field"><label for="backBottomImageX">水平偏移 / mm</label><input type="number" id="backBottomImageX" value="0" step="0.5"></div>
+<div class="field"><label for="backBottomImageY">垂直偏移 / mm</label><input type="number" id="backBottomImageY" value="0" step="0.5"></div>
+<div class="field"><label for="backBottomImageW">图片区域宽度 / mm</label><input type="number" id="backBottomImageW" value="" step="0.5" min="0.5" placeholder="留空使用封底宽度"></div>
+<div class="field"><label for="backBottomImageH">图片区域高度 / mm</label><input type="number" id="backBottomImageH" value="" step="0.5" min="0.5" placeholder="留空使用封底一半高度"></div>
+<div class="field"><label for="backBottomImageMode">图片适配方式</label><select id="backBottomImageMode"><option value="cover">铺满裁切</option><option value="contain">完整显示</option></select></div>
+<button type="button" id="removeBackBottomImage" class="secondary">移除下半部分图片</button>
+<p class="hint">默认位于封底下半部分；水平偏移 0 为居中，正值向右；垂直偏移 0 从封底中线开始，正值向下。超出封底的部分裁切，文字显示在图片上方。</p>
 </div>
 </section>
 </section>
@@ -697,11 +812,11 @@
 </div>
 <div class="check">
 <input type="checkbox" id="frontFlapShowImage">
-<label for="frontFlapShowImage">显示作者图片</label>
+<label for="frontFlapShowImage">显示前勒口图片</label>
 </div>
 <div id="frontFlapImageWrap" style="display:none">
 <div class="field">
-<label for="frontFlapImage">上传作者图片</label>
+<label for="frontFlapImage">上传前勒口图片</label>
 <input type="file" id="frontFlapImage" accept="image/*">
 </div>
 <div class="field">
@@ -709,6 +824,7 @@
 <input type="number" id="frontFlapImageW" value="60" min="20" max="200" step="1">
 </div>
 </div>
+<button type="button" id="removeFrontFlapImage" class="secondary">移除前勒口图片</button>
 <div class="field"><label for="frontFlapTextColor">前勒口文字颜色</label><input type="color" id="frontFlapTextColor" value="#000000"></div>
 <div class="field">
 <label for="frontFlapBg">前勒口底色</label>
@@ -723,6 +839,21 @@
 
 可在此填写内容简介、出版信息、定价等。</textarea>
 </div>
+<div class="check">
+<input type="checkbox" id="backFlapShowImage">
+<label for="backFlapShowImage">显示后勒口图片</label>
+</div>
+<div id="backFlapImageWrap" style="display:none">
+<div class="field">
+<label for="backFlapImage">上传后勒口图片</label>
+<input type="file" id="backFlapImage" accept="image/*">
+</div>
+<div class="field">
+<label for="backFlapImageW">图片宽度 / mm</label>
+<input type="number" id="backFlapImageW" value="60" min="20" max="200" step="1">
+</div>
+</div>
+<button type="button" id="removeBackFlapImage" class="secondary">移除后勒口图片</button>
 <div class="field"><label for="backFlapTextColor">后勒口文字颜色</label><input type="color" id="backFlapTextColor" value="#000000"></div>
 <div class="field">
 <label for="backFlapBg">后勒口底色</label>
@@ -822,10 +953,27 @@
   var $ = function(id){ return document.getElementById(id); };
   var cv = $("cv"), ctx = cv.getContext("2d");
 
+  var spineImageEl = null; var spineImageDataUrl = null;
   var coverImageEl = null;        var coverImageDataUrl = null;
   var coverFullImageEl = null;    var coverFullImageDataUrl = null;
+  var backFlapImageEl = null; var backFlapImageDataUrl = null;
   var frontFlapImageEl = null;    var frontFlapImageDataUrl = null;
   var backCoverImageEl = null;    var backCoverImageDataUrl = null;
+
+  var backBottomImageEl = null, backBottomImageDataUrl = null;
+  function backSloganAnchor(c, bc, margin){
+    return bc.x + (c.backSloganAlign === "left" ? margin : c.backSloganAlign === "right" ? bc.w-margin : bc.w/2) + c.backSloganX;
+  }
+  function backBottomImageRect(c, bc){
+    var w = c.backBottomImageW > 0 ? c.backBottomImageW : bc.w;
+    var h = c.backBottomImageH > 0 ? c.backBottomImageH : bc.h/2;
+    return {x:bc.x+(bc.w-w)/2+c.backBottomImageX, y:bc.y+bc.h/2+c.backBottomImageY,w:w,h:h};
+  }
+  function backCoverImageRect(c, bc){
+    return {x:bc.x+c.backCoverImageX, y:bc.y+c.backCoverImageY,
+      w:c.backCoverImageW > 0 ? c.backCoverImageW : bc.w,
+      h:c.backCoverImageH > 0 ? c.backCoverImageH : bc.h};
+  }
 
   function cfg(){
     var c = {
@@ -884,6 +1032,14 @@
       authorSizePt: parseFloat($("authorSizePt").value)||20,
       sloganSizePt: parseFloat($("sloganSizePt").value)||18,
       sloganTop: parseFloat($("sloganTop").value)||194,
+      backSlogan: $("backSlogan").value,
+      backSloganFont: $("backSloganFont").value,
+      backSloganColor: $("backSloganColor").value,
+      backSloganAlign: $("backSloganAlign").value,
+      backSloganSizePt: Math.max(1, parseFloat($("backSloganSizePt").value) || 18),
+      backSloganX: parseFloat($("backSloganX").value) || 0,
+      backSloganY: Number.isFinite(parseFloat($("backSloganY").value)) ? parseFloat($("backSloganY").value) : 180,
+      backCoverFont: $("backCoverFont").value,
       bodySizePt: parseFloat($("bodySizePt").value)||14,
       flapSizePt: parseFloat($("flapSizePt").value)||13,
       spineSizePt: parseFloat($("spineSizePt").value)||22,
@@ -892,7 +1048,20 @@
       textSideMargin: parseFloat($("textSideMargin").value)||16,
       backCoverTextTop: parseFloat($("backCoverTextTop").value)||20,
       backCoverTextH: parseFloat($("backCoverTextH").value)||186,
+      spineShowImage: $("spineShowImage").checked,
+      spineImageMode: $("spineImageMode").value,
+      backBottomShowImage: $("backBottomShowImage").checked,
+      backBottomImageMode: $("backBottomImageMode").value,
+      backBottomImageX: parseFloat($("backBottomImageX").value) || 0,
+      backBottomImageY: parseFloat($("backBottomImageY").value) || 0,
+      backBottomImageW: Math.max(0, parseFloat($("backBottomImageW").value) || 0),
+      backBottomImageH: Math.max(0, parseFloat($("backBottomImageH").value) || 0),
+      backImageMenu: $("backImageMenu").value,
       backCoverShowImage: $("backCoverShowImage").checked,
+      backCoverImageX: parseFloat($("backCoverImageX").value) || 0,
+      backCoverImageY: parseFloat($("backCoverImageY").value) || 0,
+      backCoverImageW: Math.max(0, parseFloat($("backCoverImageW").value) || 0),
+      backCoverImageH: Math.max(0, parseFloat($("backCoverImageH").value) || 0),
       backCoverImageMode: $("backCoverImageMode").value,
       frontFlapText: $("frontFlapText").value,
       backCoverText: $("backCoverText").value,
@@ -916,6 +1085,8 @@
       backFlapBg: $("backFlapBg").value,
       imageMode: $("imageMode").value,
       coverImageMode: $("coverImageMode").value,
+      backFlapShowImage: $("backFlapShowImage").checked,
+      backFlapImageW: Math.max(0.5, parseFloat($("backFlapImageW").value) || 60),
       frontFlapShowImage: $("frontFlapShowImage").checked,
       frontFlapImageW: parseFloat($("frontFlapImageW").value)||60
     };
@@ -1303,6 +1474,12 @@
 
     // ===== 书脊 =====
     var sp = R.spine;
+    if(c.spineShowImage && spineImageEl){
+      g.save();
+      g.beginPath(); g.rect(sp.x*ppm, sp.y*ppm, sp.w*ppm, sp.h*ppm); g.clip();
+      drawImageFit(g, spineImageEl, sp, c.spineImageMode, ppm);
+      g.restore();
+    }
     var spineTitle = c.spineSameTitle ? c.title : c.spineTitle;
     var spineAuthor = c.spineSameAuthor ? c.author : c.spineAuthor;
     var spineSize = Math.min(sp.w*0.9, ptToMm(c.spineSizePt));
@@ -1336,14 +1513,37 @@
     var bcTextTop = bc.y + c.backCoverTextTop;
     var bcTextH = c.backCoverTextH;
     if(c.backCoverShowImage && backCoverImageEl){
-      drawImageFit(g, backCoverImageEl, bc, c.backCoverImageMode, ppm);
+      g.save();
+      g.beginPath();
+      g.rect(bc.x*ppm, bc.y*ppm, bc.w*ppm, bc.h*ppm);
+      g.clip();
+      drawImageFit(g, backCoverImageEl, backCoverImageRect(c, bc), c.backCoverImageMode, ppm);
+      g.restore();
+    }
+    if(c.backBottomShowImage && backBottomImageEl){
+      g.save(); g.beginPath(); g.rect(bc.x*ppm,bc.y*ppm,bc.w*ppm,bc.h*ppm); g.clip();
+      drawImageFit(g, backBottomImageEl, backBottomImageRect(c, bc), c.backBottomImageMode, ppm);
+      g.restore();
     }
     g.save();
     g.beginPath();
     g.rect((bc.x+bm)*ppm, bcTextTop*ppm, (bc.w-2*bm)*ppm, bcTextH*ppm);
     g.clip();
-    drawTextBlock(g, c.backCoverText, (bc.x+bm)*ppm, bcTextTop*ppm, (bc.w-2*bm)*ppm, lineH*ppm, c.bodyFont, bodySize*ppm, c.backCoverTextColor, "left", false);
+    drawTextBlock(g, c.backCoverText, (bc.x+bm)*ppm, bcTextTop*ppm, (bc.w-2*bm)*ppm, lineH*ppm, c.backCoverFont, bodySize*ppm, c.backCoverTextColor, "left", false);
     g.restore();
+
+    // 封底广告语独立样式与位置，叠加在图片和正文之上。
+    if(c.backSlogan){
+      var bsSize = ptToMm(c.backSloganSizePt)*ppm;
+      var bsX = backSloganAnchor(c, bc, bm)*ppm;
+      g.save(); g.beginPath(); g.rect(bc.x*ppm,bc.y*ppm,bc.w*ppm,bc.h*ppm); g.clip();
+      g.font = fontStr(c.backSloganFont, bsSize, false);
+      g.fillStyle = c.backSloganColor; g.textBaseline = "top"; g.textAlign = c.backSloganAlign;
+      c.backSlogan.split(/\r\n|\r|\n/).forEach(function(line, i){
+        g.fillText(line, bsX, (bc.y+c.backSloganY)*ppm+i*bsSize*1.35);
+      });
+      g.restore();
+    }
 
     // ===== 前勒口（作者介绍）=====
     var ff = R.frontFlap;
@@ -1364,7 +1564,16 @@
 
     // ===== 后勒口（文字区）=====
     var bf = R.backFlap;
-    drawTextBlock(g, c.backFlapText, (bf.x+fm)*ppm, (bf.y+topM)*ppm, (bf.w-2*fm)*ppm, fLineH*ppm, c.bodyFont, fSize*ppm, c.backFlapTextColor, "left", false);
+    var backFlapTextY = bf.y + topM;
+    if(c.backFlapShowImage && backFlapImageEl){
+      var backImgW = Math.max(0, Math.min(c.backFlapImageW, bf.w - 2*fm));
+      var backImgH = Math.min(backImgW * (backFlapImageEl.naturalHeight || 1) / (backFlapImageEl.naturalWidth || 1), Math.max(0, bf.h-topM));
+      if(backImgW > 0 && backImgH > 0){
+        drawImageFit(g, backFlapImageEl, {x:bf.x+fm,y:backFlapTextY,w:backImgW,h:backImgH}, "contain", ppm);
+        backFlapTextY += backImgH + fSize*1.2;
+      }
+    }
+    drawTextBlock(g, c.backFlapText, (bf.x+fm)*ppm, backFlapTextY*ppm, (bf.w-2*fm)*ppm, fLineH*ppm, c.bodyFont, fSize*ppm, c.backFlapTextColor, "left", false);
 
     // ===== 辅助线 =====
     if(guides){
@@ -1573,9 +1782,9 @@
   var ids = ["coverW","coverH","spineW","flapW","bleed","title","subtitle","author","slogan",
     "coverLineOffsetX","coverLineTop","coverLineLength","coverLineThickness","coverLineColor",
     "publisher","spineTitle","spineAuthor","spineTitleOffsetY","spineAuthorOffsetY","spinePublisherOffsetY","frontFlapText","backCoverText","backFlapText",
-    "backCoverTextColor","frontFlapTextColor","backFlapTextColor","spineAuthorColor","spineAuthorOffsetX","authorOffsetX","bodyFont","titleFont","subtitleFont","bodyColor","titleColor","authorColor","subtitleColor","sloganColor","coverBg","spineBg","spineColor",
+    "backCoverTextColor","frontFlapTextColor","backFlapTextColor","spineAuthorColor","spineAuthorOffsetX","authorOffsetX","backSlogan","backSloganFont","backSloganColor","backSloganAlign","backSloganSizePt","backSloganX","backSloganY","backCoverFont","bodyFont","titleFont","subtitleFont","bodyColor","titleColor","authorColor","subtitleColor","sloganColor","coverBg","spineBg","spineColor",
     "frontFlapBg","backCoverBg","backFlapBg","imageMode","titleAlign","titleOffsetX","subtitleAlign","authorAlign","sloganAlign",
-    "titleLayout","subtitleLayout","titleOffsetY","subtitleOffsetX","titleSizePt","subtitleSizePt","authorSizePt","sloganSizePt","bodySizePt","flapSizePt","spineSizePt","spineAuthorSizePt","textTopMargin","textSideMargin","frontFlapImageW","titleTopMargin","bottomImgTop","bottomImgH","coverImageW","sloganTop","authorHTop","authorVTop","backCoverTextTop","backCoverTextH","subtitleTop"];
+    "titleLayout","subtitleLayout","titleOffsetY","subtitleOffsetX","titleSizePt","subtitleSizePt","authorSizePt","sloganSizePt","bodySizePt","flapSizePt","spineSizePt","spineAuthorSizePt","textTopMargin","textSideMargin","backFlapImageW","frontFlapImageW","titleTopMargin","bottomImgTop","bottomImgH","coverImageW","sloganTop","authorHTop","authorVTop","backCoverTextTop","backBottomImageX","backBottomImageY","backBottomImageW","backBottomImageH","backCoverImageX","backCoverImageY","backCoverImageW","backCoverImageH","backCoverTextH","subtitleTop"];
   ids.forEach(function(id){
     var el = $(id);
     el.addEventListener("input", redraw);
@@ -1595,10 +1804,20 @@
   }
   $("spineShowAuthor").addEventListener("change", updateSpineAuthorVisibility);
   $("spineSameAuthor").addEventListener("change", function(){ updateSpineAuthorVisibility(); redraw(); });
+  function updateBackFlapImageVisibility(){
+    $("backFlapImageWrap").style.display = $("backFlapShowImage").checked ? "" : "none";
+  }
+  $("backFlapShowImage").addEventListener("change", function(){ updateBackFlapImageVisibility(); redraw(); });
   function updateFrontFlapImageVisibility(){
     $("frontFlapImageWrap").style.display = $("frontFlapShowImage").checked ? "" : "none";
   }
   $("frontFlapShowImage").addEventListener("change", function(){ updateFrontFlapImageVisibility(); redraw(); });
+  function updateBackImageMenu(){
+    var bottom = $("backImageMenu").value === "bottom";
+    $("backFullSettings").style.display = bottom ? "none" : "";
+    $("backBottomSettings").style.display = bottom ? "" : "none";
+  }
+  $("backImageMenu").addEventListener("change", updateBackImageMenu);
   function updateBackCoverImageVisibility(){
     $("backCoverImageWrap").style.display = $("backCoverShowImage").checked ? "" : "none";
   }
@@ -1626,9 +1845,24 @@
     };
     reader.readAsDataURL(f);
   }
+  $("spineImage").addEventListener("change", function(e){
+    handleImageUpload(e, function(im, du){ spineImageEl = im; spineImageDataUrl = du; $("spineShowImage").checked = true; });
+  });
+  $("spineShowImage").addEventListener("change", redraw);
+  $("spineImageMode").addEventListener("change", redraw);
+  $("removeSpineImage").addEventListener("click", function(){
+    spineImageEl = null; spineImageDataUrl = null; $("spineImage").value = ""; $("spineShowImage").checked = false; redraw();
+  });
   $("coverImage").addEventListener("change", function(e){ handleImageUpload(e, function(im, du){ coverImageEl = im; coverImageDataUrl = du; }); });
   $("coverFullImage").addEventListener("change", function(e){ handleImageUpload(e, function(im, du){ coverFullImageEl = im; coverFullImageDataUrl = du; }); });
-  $("frontFlapImage").addEventListener("change", function(e){ handleImageUpload(e, function(im, du){ frontFlapImageEl = im; frontFlapImageDataUrl = du; }); });
+  $("frontFlapImage").addEventListener("change", function(e){ handleImageUpload(e, function(im, du){ frontFlapImageEl = im; frontFlapImageDataUrl = du; $("frontFlapShowImage").checked = true; updateFrontFlapImageVisibility(); }); });
+  $("backFlapImage").addEventListener("change", function(e){ handleImageUpload(e, function(im, du){ backFlapImageEl = im; backFlapImageDataUrl = du; $("backFlapShowImage").checked = true; updateBackFlapImageVisibility(); }); });
+  $("removeFrontFlapImage").addEventListener("click", function(){ frontFlapImageEl = null; frontFlapImageDataUrl = null; $("frontFlapImage").value = ""; $("frontFlapShowImage").checked = false; updateFrontFlapImageVisibility(); redraw(); });
+  $("removeBackFlapImage").addEventListener("click", function(){ backFlapImageEl = null; backFlapImageDataUrl = null; $("backFlapImage").value = ""; $("backFlapShowImage").checked = false; updateBackFlapImageVisibility(); redraw(); });
+  $("backBottomImage").addEventListener("change", function(e){ handleImageUpload(e, function(im, du){ backBottomImageEl = im; backBottomImageDataUrl = du; $("backBottomShowImage").checked = true; }); });
+  $("backBottomShowImage").addEventListener("change", redraw);
+  $("backBottomImageMode").addEventListener("change", redraw);
+  $("removeBackBottomImage").addEventListener("click", function(){ backBottomImageEl=null; backBottomImageDataUrl=null; $("backBottomImage").value=""; $("backBottomShowImage").checked=false; redraw(); });
   $("backCoverImage").addEventListener("change", function(e){ handleImageUpload(e, function(im, du){ backCoverImageEl = im; backCoverImageDataUrl = du; }); });
   function updateImageWrapVisibility(){
     var m = $("coverImageMode").value;
@@ -1644,7 +1878,7 @@
     // 读取是增量合并：保留读取前可用的选项及选择，避免权限变化后的
     // Canvas 再检测误判让原有字体消失。
     var selections = {};
-    ["bodyFont", "titleFont", "subtitleFont"].forEach(function(id){
+    ["bodyFont", "titleFont", "subtitleFont", "backCoverFont", "backSloganFont"].forEach(function(id){
       var sel = $(id);
       selections[id] = sel.value;
       Array.from(sel.options).forEach(function(op){
@@ -1654,7 +1888,7 @@
     names = [...new Set(names)].sort(function(a,b){ return a.localeCompare(b, "zh-CN"); });
     names.forEach(function(name){
       discoveredFonts.add(name);
-      ["bodyFont", "titleFont", "subtitleFont"].forEach(function(id){
+      ["bodyFont", "titleFont", "subtitleFont", "backCoverFont", "backSloganFont"].forEach(function(id){
         var sel = $(id);
         if(!Array.from(sel.options).some(function(op){ return op.value === name; })){
           sel.add(new Option(name, name));
@@ -1683,7 +1917,7 @@
       var fonts = await window.queryLocalFonts();
       var names = fonts.map(function(f){ return f.family; }).filter(Boolean);
       addFontFamilies(names);
-      status.textContent = "已读取 " + new Set(names).size + " 个字体家族，已加入正文、书名和副标题字体选项。部分字体可能不含中文字形。";
+      status.textContent = "已读取 " + new Set(names).size + " 个字体家族，已加入正文、书名、副标题和封底字体选项。部分字体可能不含中文字形。";
     } catch(err){
       status.textContent = "读取未完成（" + err.name + "）。请检查浏览器的本地字体权限后重试，或导入字体文件。";
     } finally { this.disabled = false; }
@@ -1710,7 +1944,7 @@
 
   function filterFontOptions(){
     var hiddenList = [];
-    ["bodyFont","titleFont","subtitleFont"].forEach(function(id){
+    ["bodyFont","titleFont","subtitleFont","backCoverFont","backSloganFont"].forEach(function(id){
       var sel = $(id);
       if(!sel) return;
       var firstUsable = null;
@@ -1742,9 +1976,12 @@
   // ---------- 工程保存 / 打开 ----------
   function saveProject(){
     var data = { version: 1, config: cfg(), images: {
+      spineImage: spineImageDataUrl || null,
       coverImage: coverImageDataUrl || null,
       coverFullImage: coverFullImageDataUrl || null,
+      backFlapImage: backFlapImageDataUrl || null,
       frontFlapImage: frontFlapImageDataUrl || null,
+      backBottomImage: backBottomImageDataUrl || null,
       backCoverImage: backCoverImageDataUrl || null
     }};
     var json = JSON.stringify(data);
@@ -1754,6 +1991,29 @@
   }
 
   function applyConfig(obj){
+    var bsDefaults = {backSlogan:"",backSloganSizePt:18,backSloganColor:"#000000",backSloganAlign:"center",backSloganX:0,backSloganY:180};
+    Object.keys(bsDefaults).forEach(function(id){ $(id).value = bsDefaults[id]; });
+    var bsFont = obj.backSloganFont || obj.backCoverFont || obj.bodyFont || "FangSong";
+    if(!Array.from($("backSloganFont").options).some(function(op){ return op.value === bsFont; })) $("backSloganFont").add(new Option(bsFont, bsFont));
+    $("backSloganFont").value = bsFont;
+    // 旧工程封底跟随正文；新工程独立设置，避免沿用上个工程的字体和字号。
+    var backFont = obj.backCoverFont || obj.bodyFont || "FangSong";
+    if(!Array.from($("backCoverFont").options).some(function(op){ return op.value === backFont; })){
+      $("backCoverFont").add(new Option(backFont, backFont));
+    }
+    $("backCoverFont").value = backFont;
+    $("bodySizePt").value = obj.bodySizePt > 0 ? obj.bodySizePt : 14;
+    $("backImageMenu").value = obj.backImageMenu === "bottom" || (!obj.backImageMenu && obj.backBottomShowImage && !obj.backCoverShowImage) ? "bottom" : "full";
+    $("backBottomShowImage").checked = false;
+    $("backBottomImageMode").value = "cover";
+    ["backBottomImageX","backBottomImageY"].forEach(function(id){ $(id).value = 0; });
+    ["backBottomImageW","backBottomImageH"].forEach(function(id){ $(id).value = ""; });
+    $("backFlapShowImage").checked = false;
+    $("backFlapImageW").value = 60;
+    $("spineShowImage").checked = false;
+    $("spineImageMode").value = "cover";
+    ["backCoverImageX","backCoverImageY"].forEach(function(id){ $(id).value = parseFloat(obj[id]) || 0; });
+    ["backCoverImageW","backCoverImageH"].forEach(function(id){ $(id).value = obj[id] > 0 ? obj[id] : ""; });
     ["backCoverTextColor","frontFlapTextColor","backFlapTextColor"].forEach(function(id){
       $(id).value = obj[id] || obj.bodyColor || "#000000";
     });
@@ -1779,18 +2039,29 @@
       var el = $(k);
       if(!el) continue;
       if(el.type === "checkbox"){ el.checked = !!obj[k]; }
-      else { el.value = ((k === "coverImageW" || k === "spineAuthorSizePt") && !(obj[k] > 0)) ? "" : obj[k]; }
+      else { el.value = ((k === "coverImageW" || k === "spineAuthorSizePt" || k === "backCoverImageW" || k === "backCoverImageH" || k === "backBottomImageW" || k === "backBottomImageH") && !(obj[k] > 0)) ? "" : obj[k]; }
     }
     updateImageWrapVisibility();
     updateSpineAuthorVisibility();
     updateFrontFlapImageVisibility();
+  updateBackFlapImageVisibility();
     updateBackCoverImageVisibility();
+    updateBackImageMenu();
     updateTitleTopVisibility();
     updateAuthorLayoutVisibility();
     filterFontOptions();
   }
 
   function applyImages(imgs){
+    backBottomImageEl = null;
+    backBottomImageDataUrl = (imgs && imgs.backBottomImage) || null;
+    $("backBottomImage").value = "";
+    backFlapImageEl = null;
+    backFlapImageDataUrl = (imgs && imgs.backFlapImage) || null;
+    $("backFlapImage").value = "";
+    spineImageDataUrl = (imgs && imgs.spineImage) || null;
+    spineImageEl = null;
+    $("spineImage").value = "";
     coverImageDataUrl = (imgs && imgs.coverImage) || null;
     coverFullImageDataUrl = (imgs && imgs.coverFullImage) || null;
     frontFlapImageDataUrl = (imgs && imgs.frontFlapImage) || null;
@@ -1802,9 +2073,12 @@
       img.onload = function(){ setter(img); redraw(); };
       img.src = dataUrl;
     }
+    load(spineImageDataUrl, function(im){ spineImageEl = im; });
     load(coverImageDataUrl, function(im){ coverImageEl = im; });
     load(coverFullImageDataUrl, function(im){ coverFullImageEl = im; });
+    load(backFlapImageDataUrl, function(im){ backFlapImageEl = im; });
     load(frontFlapImageDataUrl, function(im){ frontFlapImageEl = im; });
+    load(backBottomImageDataUrl, function(im){ backBottomImageEl = im; });
     load(backCoverImageDataUrl, function(im){ backCoverImageEl = im; });
     redraw();
   }
@@ -1834,7 +2108,9 @@
   updateImageWrapVisibility();
   updateSpineAuthorVisibility();
   updateFrontFlapImageVisibility();
+  updateBackFlapImageVisibility();
   updateBackCoverImageVisibility();
+  updateBackImageMenu();
   updateTitleTopVisibility();
   updateAuthorLayoutVisibility();
   filterFontOptions();
