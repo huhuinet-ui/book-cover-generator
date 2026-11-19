@@ -63,7 +63,7 @@
 </div>
 <div class="field">
 <label for="coverH">封面高度</label>
-<input type="number" id="coverH" value="226" min="120" max="400">
+<input type="number" id="coverH" value="206" min="120" max="400">
 </div>
 </div>
 <div class="row">
@@ -73,7 +73,7 @@
 </div>
 <div class="field">
 <label for="flapW">单侧勒口宽度</label>
-<input type="number" id="flapW" value="105" min="0" max="200">
+<input type="number" id="flapW" value="95" min="0" max="200">
 </div>
 </div>
 <div class="field">
@@ -891,9 +891,9 @@
 </div>
 <div class="check">
 <input type="checkbox" id="exportGuides">
-<label for="exportGuides">包含辅助线</label>
+<label for="exportGuides">包含辅助线（校样用）</label>
 </div>
-<p class="hint">通常选择 300 DPI。正式印刷文件一般不包含辅助线，请按印厂要求核对尺寸和出血。</p>
+<p class="hint">PDF 默认在出血外四边各留 10 mm，并添加裁切及折线标记。默认裁切尺寸 491.5 × 206 mm，含出血 497.5 × 212 mm，PDF 整页 517.5 × 232 mm。通常选择 300 DPI。正式印刷文件一般不包含辅助线，请按印厂要求核对尺寸和出血。</p>
 </section>
 <section class="card">
 <h3>下载文件</h3>
@@ -978,9 +978,9 @@
   function cfg(){
     var c = {
       coverW: parseFloat($("coverW").value)||143,
-      coverH: parseFloat($("coverH").value)||226,
+      coverH: parseFloat($("coverH").value)||206,
       spineW: parseFloat($("spineW").value)||15.5,
-      flapW:  parseFloat($("flapW").value)||105,
+      flapW:  parseFloat($("flapW").value)||95,
       bleed:  parseFloat($("bleed").value)||3,
       title:  $("title").value,
       titlePos: $("titlePos").value,
@@ -1691,9 +1691,25 @@
   }
 
   // 生成单页 PDF：页面物理尺寸 = 图片像素 ÷ DPI（与 img2pdf.py 一致），图片铺满整页
-  function makePdfBlob(canvas, dpi){
+  function makePdfBlob(canvas, dpi, printLayout){
     var wpx = canvas.width, hpx = canvas.height;
-    var wpt = wpx/dpi*72, hpt = hpx/dpi*72;
+    var imageWpt = wpx/dpi*72, imageHpt = hpx/dpi*72;
+    var unit = 72/25.4;
+    var margin = printLayout ? 10*unit : 0;
+    var imageW = printLayout ? printLayout.width*unit : imageWpt;
+    var imageH = printLayout ? printLayout.height*unit : imageHpt;
+    var wpt = imageW+2*margin, hpt = imageH+2*margin;
+    var boxes = "", marks = "";
+    if(printLayout){
+      var b = printLayout.bleed*unit;
+      function rectBox(inset){ return [inset,inset,wpt-inset,hpt-inset].map(function(v){return v.toFixed(4);}).join(" "); }
+      boxes = " /CropBox [0 0 " + wpt.toFixed(4)+" "+hpt.toFixed(4)+"] /BleedBox ["+rectBox(margin)+"] /TrimBox ["+rectBox(margin+b)+"] /ArtBox ["+rectBox(margin+b)+"]";
+      function line(x1,y1,x2,y2){ marks += [x1,y1].map(function(v){return v.toFixed(4);}).join(" ")+" m "+[x2,y2].map(function(v){return v.toFixed(4);}).join(" ")+" l S\n"; }
+      var left=margin+b, right=wpt-margin-b, bottom=margin+b, top=hpt-margin-b;
+      [left,right].forEach(function(x){ line(x,0,x,margin);line(x,hpt-margin,x,hpt); });
+      [bottom,top].forEach(function(y){ line(0,y,margin,y);line(wpt-margin,y,wpt,y); });
+      printLayout.folds.forEach(function(x){ x=(10+x)*unit;line(x,0,x,margin);line(x,hpt-margin,x,hpt); });
+    }
     var b64 = canvas.toDataURL("image/jpeg", 0.95).split(",")[1];
     var bin = atob(b64);
     var jpeg = new Uint8Array(bin.length);
@@ -1713,13 +1729,13 @@
     function objStart(id){ xref[id] = offset; writeText(id + " 0 obj\n"); }
     function objEnd(){ writeText("\nendobj\n"); }
 
-    var content = "q " + wpt.toFixed(3) + " 0 0 " + hpt.toFixed(3) + " 0 0 cm /Im0 Do Q";
+    var content = "q " + imageW.toFixed(4) + " 0 0 " + imageH.toFixed(4) + " " + margin.toFixed(4) + " " + margin.toFixed(4) + " cm /Im0 Do Q\n" + (printLayout ? "q 0 G 0.25 w\n"+marks+"Q" : "");
 
     objStart(1); writeText("<< /Type /Catalog /Pages 2 0 R >>"); objEnd();
     objStart(2); writeText("<< /Type /Pages /Kids [3 0 R] /Count 1 >>"); objEnd();
     objStart(3);
     writeText("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 " + wpt.toFixed(3) + " " + hpt.toFixed(3) +
-      "] /Resources << /XObject << /Im0 4 0 R >> /ProcSet [/PDF /ImageC] >> /Contents 5 0 R >>");
+      "]" + boxes + " /Resources << /XObject << /Im0 4 0 R >> /ProcSet [/PDF /ImageC] >> /Contents 5 0 R >>");
     objEnd();
     objStart(4);
     writeText("<< /Type /XObject /Subtype /Image /Width " + wpx + " /Height " + hpx +
@@ -1750,7 +1766,11 @@
 
   function downloadPdf(){
     var r = renderExportCanvas();
-    downloadBlob(makePdfBlob(r.canvas, r.dpi), r.name + ".pdf");
+    var c = cfg(), L = layout(c), includeBleed = $("exportBleed").checked;
+    var b = includeBleed ? c.bleed : 0;
+    var printLayout = {width:2*c.coverW+2*c.flapW+c.spineW+2*b, height:c.coverH+2*b, bleed:b,
+      folds:[b+c.flapW,b+c.flapW+c.coverW,b+c.flapW+c.coverW+c.spineW,b+c.flapW+2*c.coverW+c.spineW]};
+    downloadBlob(makePdfBlob(r.canvas, r.dpi, printLayout), r.name + ".pdf");
   }
 
   // 分区导航：仅切换可见性，所有工程控件始终保留在页面中。
